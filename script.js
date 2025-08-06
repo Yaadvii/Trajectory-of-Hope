@@ -6,24 +6,21 @@ function setup() {
   player = new Player();
   obstacles.push(new Obstacle());
 
-  // Create fixed stars at strategic positions
+  // Fixed position of stars in the background
   let starPositions = [
     [50, 60], [150, 30], [280, 80], [420, 45], [520, 90],
     [80, 220], [200, 180], [350, 200], [480, 250], [550, 320],
-    [30, 350], [120, 300], [250, 340], [380, 360], [450, 180], [320, 280]
-  ];
+    [30, 350], [120, 300], [250, 340], [380, 360], [450, 180], [320, 280]]
+    ;
   celestialObjects = starPositions.map(pos => new CelestialObject(pos[0], pos[1]));
 
   // Spawn initial planet
   spawnPlanet();
 }
-
 function draw() {
   background(bgBrightness);
-
   player.update();
   player.show();
-
   if (frameCount % 60 === 0) obstacles.push(new Obstacle());
 
   // Update celestial objects
@@ -34,7 +31,6 @@ function draw() {
   updatePlanet(jupiter, 'jupiter');
 
   if (!planetVisible) spawnPlanet();
-
   // Handle meteors
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
@@ -42,10 +38,9 @@ function draw() {
   if (meteor) {
     meteor.update();
     meteor.show();
-    if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope.");
+    if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope!");
     if (meteor.offscreen()) meteor = null;
   }
-
   // Handle obstacles
   for (let i = obstacles.length - 1; i >= 0; i--) {
     obstacles[i].update();
@@ -54,26 +49,22 @@ function draw() {
     if (obstacles[i].hits(player)) {
       gameOver("You faced an obstacle. Don't lose hope.");
     }
-
     if (obstacles[i].offscreen()) {
       obstacles.splice(i, 1);
       score++;
       player.grow(0.5);
       if (bgBrightness < 100) bgBrightness += 2;
-
       if (score >= 50) {
         noLoop();
         showWinMessage();
       }
     }
   }
-
   // Score display
   fill(255);
   textSize(16);
   text("Obstacles overcome: " + score, 10, 20);
 }
-
 function spawnPlanet() {
   if (random() < 0.5) {
     saturn = new Planet('saturn', random(50, width - 50), height + 50);
@@ -82,7 +73,6 @@ function spawnPlanet() {
   }
   planetVisible = true;
 }
-
 function updatePlanet(planet, type) {
   if (planet) {
     planet.update();
@@ -108,7 +98,7 @@ function gameOver(message) {
 
 function showWinMessage() {
   fill(0, 255, 0);
-  textSize(24);
+  textSize(20);
   textAlign(CENTER);
   text("Congratulations! You've discovered that hope isn't just", width / 2, height / 2 - 60);
   text("about reaching the destination - it's about growing", width / 2, height / 2 - 40);
@@ -119,24 +109,20 @@ function showWinMessage() {
   textSize(16);
   text("Final Score: " + score, width / 2, height / 2 + 60);
 }
-
 class Player {
   constructor() {
     this.x = 100;
     this.y = height / 2;
     this.r = 10;
   }
-
   update() {
     if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
     if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
     this.y = constrain(this.y, this.r, height - this.r);
   }
-
   grow(amount) {
     this.r += amount;
   }
-
   show() {
     if (!this.starSprite) {
       let starPattern = `....y...,
