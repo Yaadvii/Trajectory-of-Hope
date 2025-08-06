@@ -68,15 +68,15 @@ class Player {
     if (!this.starSprite) {
       // Create pixel art star pattern
       let starPattern = `
-....y...
-...yy...
-..yyyy..
-.yyyyyy.
+....y...,
+...yyy...
+..yyyyy..
+.yyyyyyy.
 yyyyyyyyy
-.yyyyyy.
-..yyyy..
-...yy...
-....y...`;
+.yyyyyyy.
+..yyyyy..
+...yyy...
+....y...,`;
       
       // Create the pixel art sprite
       this.starSprite = spriteArt(starPattern, 3);
