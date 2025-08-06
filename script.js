@@ -12,7 +12,7 @@ function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
-  
+
   // Create fixed celestial objects at strategic positions
   celestialObjects = [
     new CelestialObject(50, 60),
@@ -32,7 +32,7 @@ function setup() {
     new CelestialObject(450, 180),
     new CelestialObject(320, 280)
   ];
-  
+
   // Create only one planet initially (randomly choose between Saturn and Jupiter)
   if (random() < 0.5) {
     saturn = new Planet('saturn', random(50, width - 50), height + 50);
@@ -58,29 +58,29 @@ function draw() {
     star.update();
     star.show();
   }
-  
+
   // Update and show Saturn
   if (saturn) {
     saturn.update();
     saturn.show();
-    
+
     if (saturn.offscreen()) {
       saturn = null;
       planetVisible = false;
     }
   }
-  
+
   // Update and show Jupiter
   if (jupiter) {
     jupiter.update();
     jupiter.show();
-    
+
     if (jupiter.offscreen()) {
       jupiter = null;
       planetVisible = false;
     }
   }
-  
+
   // Spawn a new planet only if no planet is currently visible
   if (!planetVisible && !saturn && !jupiter) {
     if (random() < 0.5) {
@@ -93,7 +93,7 @@ function draw() {
 
   // Create meteor at specific scores with random positions for fair collision chances
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
-  
+
   if (meteorScores.includes(score) && meteor === null) {
     meteor = new Meteor();
   }
@@ -109,7 +109,7 @@ function draw() {
       textSize(24);
       textAlign(CENTER);
       text("You faced a minor setback. Don't lose hope.", width / 2, height / 2 - 20);
-      
+
       fill(0, 255, 0);
       textSize(18);
       text("Click refresh to try again", width / 2, height / 2 + 20);
@@ -130,7 +130,7 @@ function draw() {
       textSize(24);
       textAlign(CENTER);
       text("You faced an obstacle. Don't lose hope.", width / 2, height / 2 - 20);
-      
+
       fill(0, 255, 0);
       textSize(18);
       text("Click refresh to try again", width / 2, height / 2 + 20);
@@ -141,17 +141,21 @@ function draw() {
       score++;
       player.grow(0.5);
       if (bgBrightness < 100) bgBrightness += 2;
-      
+
       // End game at score 50
       if (score >= 50) {
         noLoop();
         fill(0, 255, 0);
-        textSize(32);
+        textSize(24);
         textAlign(CENTER);
-        text("You reached maximum hope!", width / 2, height / 2);
-        fill(255);
+        text("Congratulations! You've discovered that hope isn't just", width / 2, height / 2 - 60);
+        text("about reaching the destination - it's about growing", width / 2, height / 2 - 40);
+        text("stronger with every challenge you face.", width / 2, height / 2 - 20);
+        text("You overcame all obstacles and your light", width / 2, height / 2 + 10);
+        text("now shines brightest in the cosmos!", width / 2, height / 2 + 30);
+        fill(255, 255, 200);
         textSize(16);
-        text("Final Score: " + score, width / 2, height / 2 + 40);
+        text("Final Score: " + score, width / 2, height / 2 + 60);
       }
     }
   }
@@ -226,7 +230,7 @@ class Obstacle {
     this.x = width;
     this.speed = 3;
     this.stones = [];
-    
+
     // 30% chance to create a tall obstacle that reaches height/2
     if (random() < 0.3) {
       this.h = height / 2; // 200 pixels tall
@@ -235,15 +239,15 @@ class Obstacle {
     }
 
     this.y = random([0, height - this.h]);
-    
+
     // Create stacked stones for asteroid belt effect
     this.createStones();
   }
-  
+
   createStones() {
     let currentY = this.y + this.h; // Start from bottom
     let stoneHeight = 0;
-    
+
     while (stoneHeight < this.h) {
       let stone = {
         x: this.x + random(-8, 8), // Slight horizontal variation
@@ -254,7 +258,7 @@ class Obstacle {
         color: random(['#4a4a4a', '#5a5a5a', '#3a3a3a', '#6a6a6a']),
         craters: []
       };
-      
+
       // Add small craters to stones
       for (let i = 0; i < random(1, 3); i++) {
         stone.craters.push({
@@ -263,7 +267,7 @@ class Obstacle {
           r: random(2, 4)
         });
       }
-      
+
       this.stones.push(stone);
       currentY = stone.y;
       stoneHeight += stone.h;
@@ -283,24 +287,24 @@ class Obstacle {
       push();
       translate(stone.x + stone.w/2, stone.y + stone.h/2);
       rotate(stone.rotation);
-      
+
       // Main stone body
       fill(stone.color);
       stroke(100);
       strokeWeight(1);
       ellipse(0, 0, stone.w, stone.h);
-      
+
       // Add texture with darker craters
       fill(30);
       noStroke();
       for (let crater of stone.craters) {
         ellipse(crater.x, crater.y, crater.r);
       }
-      
+
       // Add highlights for 3D effect
       fill(150, 150, 150, 80);
       ellipse(-stone.w/4, -stone.h/4, stone.w/3, stone.h/3);
-      
+
       pop();
     }
   }
@@ -398,7 +402,7 @@ class CelestialObject {
     // Fixed position
     this.x = x;
     this.y = y;
-    
+
     // Star properties
     this.r = random(1, 2.5);
     this.twinkle = random(150, 255);
@@ -415,12 +419,12 @@ class CelestialObject {
 
   show() {
     push();
-    
+
     // Draw star shape with prominent points
     fill(255, 255, 200, this.twinkle);
     stroke(255, 255, 150, this.twinkle * 0.9);
     strokeWeight(1.2);
-    
+
     // Create a 4-pointed star shape
     beginShape();
     // Top point
@@ -436,16 +440,16 @@ class CelestialObject {
     vertex(this.x + this.r * 2, this.y);
     vertex(this.x + this.r * 0.3, this.y - this.r * 0.3);
     endShape(CLOSE);
-    
+
     // Add center glow
     fill(255, 255, 200, this.twinkle * 0.8);
     noStroke();
     ellipse(this.x, this.y, this.r * 0.8);
-    
+
     // Subtle outer glow effect
     fill(255, 255, 200, this.twinkle * 0.1);
     ellipse(this.x, this.y, this.r * 6);
-    
+
     pop();
   }
 }
@@ -456,7 +460,7 @@ class Planet {
     this.x = x;
     this.y = y;
     this.speed = random(0.5, 1.2);
-    
+
     if (type === 'saturn') {
       this.r = random(15, 20);
       this.color = color(255, 215, 140); // Pale yellow-beige
@@ -466,21 +470,21 @@ class Planet {
       this.stripeOffset = random(0, TWO_PI);
     }
   }
-  
+
   update() {
     this.y -= this.speed;
   }
-  
+
   show() {
     push();
-    
+
     if (this.type === 'saturn') {
       // Draw Saturn
       fill(this.color);
       stroke(255, 255, 255, 100);
       strokeWeight(1);
       ellipse(this.x, this.y, this.r * 2);
-      
+
       // Saturn's rings
       noFill();
       stroke(200, 200, 200, 150);
@@ -488,14 +492,14 @@ class Planet {
       ellipse(this.x, this.y, this.r * 2.8);
       strokeWeight(1);
       ellipse(this.x, this.y, this.r * 3.2);
-      
+
     } else if (this.type === 'jupiter') {
       // Draw Jupiter with bands
       fill(this.color);
       stroke(255, 255, 255, 80);
       strokeWeight(1);
       ellipse(this.x, this.y, this.r * 2);
-      
+
       // Jupiter's bands
       noFill();
       stroke(150, 100, 60, 120);
@@ -505,16 +509,16 @@ class Planet {
         let bandY = this.y + i * bandSpacing;
         arc(this.x, bandY, this.r * 1.8, this.r * 0.3, 0, PI);
       }
-      
+
       // Great Red Spot
       fill(180, 80, 60, 150);
       noStroke();
       ellipse(this.x + this.r * 0.3, this.y + this.r * 0.2, this.r * 0.4, this.r * 0.25);
     }
-    
+
     pop();
   }
-  
+
   offscreen() {
     return this.y + this.r < 0;
   }
