@@ -3,6 +3,7 @@ let player;
 let obstacles = [];
 let score = 0;
 let bgBrightness = 0;
+let meteor = null;
 
 function setup() {
   createCanvas(600, 400);
@@ -18,6 +19,29 @@ function draw() {
 
   if (frameCount % 60 === 0) {
     obstacles.push(new Obstacle());
+  }
+
+  // Create meteor when score is between 9-10
+  if (score >= 9 && score <= 10 && meteor === null) {
+    meteor = new Meteor();
+  }
+
+  // Update and show meteor
+  if (meteor) {
+    meteor.update();
+    meteor.show();
+    
+    if (meteor.hits(player)) {
+      noLoop(); // Game Over
+      fill(255, 0, 0);
+      textSize(32);
+      textAlign(CENTER);
+      text("You lost hope.", width / 2, height / 2);
+    }
+    
+    if (meteor.offscreen()) {
+      meteor = null;
+    }
   }
 
   for (let i = obstacles.length - 1; i >= 0; i--) {
@@ -136,5 +160,77 @@ class Obstacle {
 
   offscreen() {
     return this.x + this.w < 0;
+  }
+}
+
+class Meteor {
+  constructor() {
+    this.x = width / 2; // Fixed x position at center
+    this.y = 0; // Start from top
+    this.r = 25; // Meteor radius
+    this.speed = 4;
+    this.flameParticles = [];
+    
+    // Create initial flame particles
+    for (let i = 0; i < 8; i++) {
+      this.flameParticles.push({
+        x: 0,
+        y: 0,
+        size: random(3, 8),
+        alpha: random(150, 255)
+      });
+    }
+  }
+
+  update() {
+    this.y += this.speed;
+    
+    // Update flame particles
+    for (let particle of this.flameParticles) {
+      particle.x = random(-this.r * 0.8, this.r * 0.8);
+      particle.y = random(-this.r * 1.5, -this.r * 0.5);
+      particle.alpha = random(100, 255);
+    }
+  }
+
+  show() {
+    push();
+    translate(this.x, this.y);
+    
+    // Draw flame trails
+    for (let particle of this.flameParticles) {
+      // Orange flame
+      fill(255, 140, 0, particle.alpha * 0.8);
+      noStroke();
+      ellipse(particle.x, particle.y, particle.size);
+      
+      // Yellow highlights
+      fill(255, 255, 0, particle.alpha * 0.6);
+      ellipse(particle.x, particle.y, particle.size * 0.6);
+    }
+    
+    // Draw meteor body
+    fill(80, 50, 30); // Dark brown/black meteor
+    stroke(255, 100, 0); // Orange glow outline
+    strokeWeight(2);
+    ellipse(0, 0, this.r * 2);
+    
+    // Add meteor surface details
+    fill(120, 80, 50);
+    noStroke();
+    ellipse(-5, -3, 6);
+    ellipse(7, 2, 4);
+    ellipse(-2, 8, 5);
+    
+    pop();
+  }
+
+  hits(player) {
+    let distance = dist(this.x, this.y, player.x, player.y);
+    return distance < (this.r + player.r);
+  }
+
+  offscreen() {
+    return this.y - this.r > height;
   }
 }
