@@ -68,8 +68,39 @@ class Player {
   }
 
   show() {
-    fill(255, 255, 200);
-    ellipse(this.x, this.y, this.r * 2);
+    // Draw the main star
+    this.drawStar(this.x, this.y, this.r * 0.8, this.r * 1.6, 5);
+    
+    // Add shine effect with smaller bright star on top
+    push();
+    translate(this.x - this.r * 0.3, this.y - this.r * 0.3);
+    fill(255, 255, 255, 180);
+    this.drawStar(0, 0, this.r * 0.3, this.r * 0.6, 5);
+    pop();
+  }
+
+  drawStar(x, y, radius1, radius2, npoints) {
+    push();
+    translate(x, y);
+    
+    // Main star body - golden yellow
+    fill(255, 215, 0);
+    stroke(255, 255, 150);
+    strokeWeight(1);
+    
+    let angle = TWO_PI / npoints;
+    let halfAngle = angle / 2.0;
+    beginShape();
+    for (let a = 0; a < TWO_PI; a += angle) {
+      let sx = cos(a) * radius2;
+      let sy = sin(a) * radius2;
+      vertex(sx, sy);
+      sx = cos(a + halfAngle) * radius1;
+      sy = sin(a + halfAngle) * radius1;
+      vertex(sx, sy);
+    }
+    endShape(CLOSE);
+    pop();
   }
 }
 
