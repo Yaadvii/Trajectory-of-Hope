@@ -3,28 +3,15 @@ let player;
 let obstacles = [];
 let score = 0;
 let bgBrightness = 0;
-let backgroundStars = [];
 
 function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
-  
-  // Generate random background stars
-  for (let i = 0; i < 15; i++) {
-    backgroundStars.push({
-      x: random(width),
-      y: random(height),
-      size: random(8, 20)
-    });
-  }
 }
 
 function draw() {
   background(bgBrightness);
-  
-  // Draw background stars
-  drawBackgroundStars();
 
   player.update();
   player.show();
@@ -58,67 +45,7 @@ function draw() {
   text("Hope: " + score, 10, 20);
 }
 
-function drawBackgroundStars() {
-  fill(255);
-  noStroke();
-  
-  for (let i = 0; i < backgroundStars.length; i++) {
-    let star = backgroundStars[i];
-    if (i % 2 === 0) {
-      draw4PointStar(star.x, star.y, star.size);
-    } else {
-      drawSnowflake(star.x, star.y, star.size);
-    }
-  }
-}
 
-function draw4PointStar(x, y, size) {
-  push();
-  translate(x, y);
-  beginShape();
-  
-  // Create a 4-pointed star
-  for (let i = 0; i < 8; i++) {
-    let angle = TWO_PI / 8 * i - PI/2;
-    let radius = (i % 2 === 0) ? size : size * 0.3;
-    let starX = cos(angle) * radius;
-    let starY = sin(angle) * radius;
-    vertex(starX, starY);
-  }
-  
-  endShape(CLOSE);
-  pop();
-}
-
-function drawSnowflake(x, y, size) {
-  push();
-  translate(x, y);
-  stroke(255);
-  strokeWeight(1);
-  
-  // Draw 6 lines from center for snowflake pattern
-  for (let i = 0; i < 6; i++) {
-    let angle = TWO_PI / 6 * i;
-    let endX = cos(angle) * size;
-    let endY = sin(angle) * size;
-    line(0, 0, endX, endY);
-    
-    // Add small branches
-    let branchSize = size * 0.3;
-    let branchX = cos(angle) * branchSize;
-    let branchY = sin(angle) * branchSize;
-    
-    // Left branch
-    let leftAngle = angle - PI/4;
-    line(branchX, branchY, branchX + cos(leftAngle) * branchSize * 0.5, branchY + sin(leftAngle) * branchSize * 0.5);
-    
-    // Right branch  
-    let rightAngle = angle + PI/4;
-    line(branchX, branchY, branchX + cos(rightAngle) * branchSize * 0.5, branchY + sin(rightAngle) * branchSize * 0.5);
-  }
-  
-  pop();
-}
 
 class Player {
   constructor() {
