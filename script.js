@@ -162,7 +162,7 @@ function draw() {
 
   fill(255);
   textSize(16);
-  text("Hope: " + score, 10, 20);
+  text("Obstacles overcome: " + score, 10, 20);
 }
 
 
