@@ -289,9 +289,10 @@ class CelestialObject {
   }
 
   update() {
-    // Only update twinkling effect
-    this.twinkle = 180 + sin(frameCount * this.twinkleSpeed + this.twinkleOffset) * 75;
-    this.twinkle = constrain(this.twinkle, 80, 255);
+    // Random twinkling effect
+    if (random() < 0.05) { // 5% chance each frame to change twinkle
+      this.twinkle = random(80, 255);
+    }
   }
 
   show() {
