@@ -6,6 +6,7 @@ let meteor = null;
 let celestialObjects = [];
 let saturn = null;
 let jupiter = null;
+let planetVisible = false;
 
 function setup() {
   createCanvas(600, 400);
@@ -32,9 +33,14 @@ function setup() {
     new CelestialObject(320, 280)
   ];
   
-  // Create Saturn and Jupiter at random positions
-  saturn = new Planet('saturn', random(50, width - 50), height + 50);
-  jupiter = new Planet('jupiter', random(50, width - 50), height + 100);
+  // Create only one planet initially (randomly choose between Saturn and Jupiter)
+  if (random() < 0.5) {
+    saturn = new Planet('saturn', random(50, width - 50), height + 50);
+    planetVisible = true;
+  } else {
+    jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
+    planetVisible = true;
+  }
 }
 
 function draw() {
@@ -59,7 +65,8 @@ function draw() {
     saturn.show();
     
     if (saturn.offscreen()) {
-      saturn = new Planet('saturn', random(50, width - 50), height + 50);
+      saturn = null;
+      planetVisible = false;
     }
   }
   
@@ -69,8 +76,19 @@ function draw() {
     jupiter.show();
     
     if (jupiter.offscreen()) {
+      jupiter = null;
+      planetVisible = false;
+    }
+  }
+  
+  // Spawn a new planet only if no planet is currently visible
+  if (!planetVisible && !saturn && !jupiter) {
+    if (random() < 0.5) {
+      saturn = new Planet('saturn', random(50, width - 50), height + 50);
+    } else {
       jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
     }
+    planetVisible = true;
   }
 
   // Create meteor at specific scores with random positions for fair collision chances
