@@ -1,5 +1,6 @@
 let player, obstacles = [], score = 0, bgBrightness = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null, planetVisible = false;
+let gameState = 'welcome';
 
 function setup() {
   createCanvas(600, 400);
@@ -18,6 +19,10 @@ function setup() {
   spawnPlanet();
 }
 function draw() {
+  if (gameState === 'welcome') {
+    showWelcomeScreen();
+    return;
+  }
   background(bgBrightness);
   player.update();
   player.show();
@@ -109,6 +114,37 @@ function showWinMessage() {
   textSize(16);
   text("Final Score: " + score, width / 2, height / 2 + 60);
 }
+
+function showWelcomeScreen() {
+  background(10, 10, 30);
+  celestialObjects.forEach(star => { star.update(); star.show(); });
+  
+  fill(255, 255, 150);
+  textAlign(CENTER);
+  textSize(28);
+  text("Light in the Dark", width / 2, 50);
+  
+  fill(255);
+  textSize(11);
+  text("Welcome to Light in the Dark — a game about hope and resilience.", width / 2, 90);
+  text("Use the up (↑) and down (↓) arrow keys to guide your star through", width / 2, 110);
+  text("a galaxy filled with challenges. Dodge towering asteroid belts and", width / 2, 125);
+  text("evade flying meteors as you move forward. With every obstacle you", width / 2, 140);
+  text("overcome, your star grows brighter. Make it past 50 challenges to", width / 2, 155);
+  text("win and become the brightest star in the cosmos.", width / 2, 170);
+  text("Remember: every setback is just a setup for your shine.", width / 2, 190);
+  
+  fill(200);
+  textSize(16);
+  text("Click anywhere to start your journey.", width / 2, 250);
+}
+
+function mousePressed() {
+  if (gameState === 'welcome') {
+    gameState = 'playing';
+  }
+}
+
 class Player {
   constructor() {
     this.x = 100;
@@ -116,9 +152,11 @@ class Player {
     this.r = 10;
   }
   update() {
-    if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
-    if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
-    this.y = constrain(this.y, this.r, height - this.r);
+    if (gameState === 'playing') {
+      if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
+      if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
+      this.y = constrain(this.y, this.r, height - this.r);
+    }
   }
   grow(amount) {
     this.r += amount;
