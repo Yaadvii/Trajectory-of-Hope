@@ -61,8 +61,8 @@ class Player {
   }
 
   update() {
-    if (keyIsDown(UP_ARROW)) this.y -= 5;
-    if (keyIsDown(DOWN_ARROW)) this.y += 5;
+    if (kb.pressing('ArrowUp')) this.y -= 5;
+    if (kb.pressing('ArrowDown')) this.y += 5;
     this.y = constrain(this.y, this.r, height - this.r);
   }
 
