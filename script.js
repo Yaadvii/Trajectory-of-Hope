@@ -16,7 +16,7 @@ function draw() {
   player.update();
   player.show();
 
-  if (frameCount % 100 === 0) {
+  if (frameCount % 60 === 0) {
     obstacles.push(new Obstacle());
   }
 
