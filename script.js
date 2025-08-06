@@ -297,23 +297,35 @@ class CelestialObject {
   show() {
     push();
     
-    // Draw twinkling star with subtle glow
+    // Draw star shape with prominent points
+    fill(255, 255, 200, this.twinkle);
+    stroke(255, 255, 150, this.twinkle * 0.9);
+    strokeWeight(1.2);
+    
+    // Create a 4-pointed star shape
+    beginShape();
+    // Top point
+    vertex(this.x, this.y - this.r * 2);
+    vertex(this.x - this.r * 0.3, this.y - this.r * 0.3);
+    // Left point
+    vertex(this.x - this.r * 2, this.y);
+    vertex(this.x - this.r * 0.3, this.y + this.r * 0.3);
+    // Bottom point
+    vertex(this.x, this.y + this.r * 2);
+    vertex(this.x + this.r * 0.3, this.y + this.r * 0.3);
+    // Right point
+    vertex(this.x + this.r * 2, this.y);
+    vertex(this.x + this.r * 0.3, this.y - this.r * 0.3);
+    endShape(CLOSE);
+    
+    // Add center glow
     fill(255, 255, 200, this.twinkle * 0.8);
     noStroke();
+    ellipse(this.x, this.y, this.r * 0.8);
     
-    // Main star body
-    ellipse(this.x, this.y, this.r * 2);
-    
-    // Star points (dimmer than main body)
-    stroke(255, 255, 200, this.twinkle * 0.4);
-    strokeWeight(0.8);
-    line(this.x - this.r * 1.5, this.y, this.x + this.r * 1.5, this.y);
-    line(this.x, this.y - this.r * 1.5, this.x, this.y + this.r * 1.5);
-    
-    // Subtle glow effect
-    fill(255, 255, 200, this.twinkle * 0.2);
-    noStroke();
-    ellipse(this.x, this.y, this.r * 4);
+    // Subtle outer glow effect
+    fill(255, 255, 200, this.twinkle * 0.1);
+    ellipse(this.x, this.y, this.r * 6);
     
     pop();
   }
