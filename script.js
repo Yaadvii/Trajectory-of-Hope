@@ -87,8 +87,8 @@ yyyyyyyyy
     translate(this.x, this.y);
     
     // Scale the star based on its radius
-    let scale = this.r / 20; // 20 is the initial radius
-    scale(scale);
+    let scaleAmount = this.r / 20; // 20 is the initial radius
+    scale(scaleAmount);
     
     // Add glow effect
     drawingContext.shadowColor = 'yellow';
