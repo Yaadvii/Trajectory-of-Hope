@@ -21,8 +21,8 @@ function draw() {
     obstacles.push(new Obstacle());
   }
 
-  // Create meteor when score is between 9-10
-  if (score >= 9 && score <= 10 && meteor === null) {
+  // Create meteor at scores 5, 7, and 22
+  if ((score === 5 || score === 7 || score === 22) && meteor === null) {
     meteor = new Meteor();
   }
 
