@@ -371,7 +371,6 @@ class Planet {
     }
     pop();
   }
-
   offscreen() {
     return this.y + this.r < 0;
   }
