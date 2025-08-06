@@ -216,8 +216,9 @@ yyyyyyyyy
 class Obstacle {
   constructor() {
     this.x = width;
-    this.w = 20;
-
+    this.speed = 3;
+    this.stones = [];
+    
     // 30% chance to create a tall obstacle that reaches height/2
     if (random() < 0.3) {
       this.h = height / 2; // 200 pixels tall
@@ -226,24 +227,89 @@ class Obstacle {
     }
 
     this.y = random([0, height - this.h]);
-    this.speed = 3;
+    
+    // Create stacked stones for asteroid belt effect
+    this.createStones();
+  }
+  
+  createStones() {
+    let currentY = this.y + this.h; // Start from bottom
+    let stoneHeight = 0;
+    
+    while (stoneHeight < this.h) {
+      let stone = {
+        x: this.x + random(-8, 8), // Slight horizontal variation
+        y: currentY - random(12, 20),
+        w: random(15, 25),
+        h: random(12, 18),
+        rotation: random(0, TWO_PI),
+        color: random(['#4a4a4a', '#5a5a5a', '#3a3a3a', '#6a6a6a']),
+        craters: []
+      };
+      
+      // Add small craters to stones
+      for (let i = 0; i < random(1, 3); i++) {
+        stone.craters.push({
+          x: random(-stone.w/2, stone.w/2),
+          y: random(-stone.h/2, stone.h/2),
+          r: random(2, 4)
+        });
+      }
+      
+      this.stones.push(stone);
+      currentY = stone.y;
+      stoneHeight += stone.h;
+    }
   }
 
   update() {
     this.x -= this.speed;
+    // Update all stone positions
+    for (let stone of this.stones) {
+      stone.x -= this.speed;
+    }
   }
 
   show() {
-    fill(50);
-    rect(this.x, this.y, this.w, this.h);
+    for (let stone of this.stones) {
+      push();
+      translate(stone.x + stone.w/2, stone.y + stone.h/2);
+      rotate(stone.rotation);
+      
+      // Main stone body
+      fill(stone.color);
+      stroke(100);
+      strokeWeight(1);
+      ellipse(0, 0, stone.w, stone.h);
+      
+      // Add texture with darker craters
+      fill(30);
+      noStroke();
+      for (let crater of stone.craters) {
+        ellipse(crater.x, crater.y, crater.r);
+      }
+      
+      // Add highlights for 3D effect
+      fill(150, 150, 150, 80);
+      ellipse(-stone.w/4, -stone.h/4, stone.w/3, stone.h/3);
+      
+      pop();
+    }
   }
 
   hits(player) {
-    return collideRectCircle(this.x, this.y, this.w, this.h, player.x, player.y, player.r * 2);
+    // Check collision with each stone
+    for (let stone of this.stones) {
+      let distance = dist(player.x, player.y, stone.x + stone.w/2, stone.y + stone.h/2);
+      if (distance < (max(stone.w, stone.h)/2 + player.r)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   offscreen() {
-    return this.x + this.w < 0;
+    return this.x < -50; // Account for stone width variations
   }
 }
 
