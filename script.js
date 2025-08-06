@@ -20,8 +20,8 @@ function draw() {
     obstacles.push(new Obstacle());
   }
 
-  // Create meteor at scores 2, 15, 5, 7, 19, 22, 26
-  if ((score === 2 || score === 15 || score === 5 || score === 7 || score === 19 || score === 22 || score === 26) && meteor === null) {
+  // Create meteor at scores 2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41
+  if ((score === 2 || score === 5 || score === 7 || score === 13 || score === 15 || score === 17 || score === 19 || score === 22 || score === 26 || score === 33 || score === 38 || score === 41) && meteor === null) {
     meteor = new Meteor();
   }
 
@@ -166,7 +166,7 @@ class Meteor {
   constructor() {
     this.x = width / 2; // Fixed x position at center
     this.y = 0; // Start from top
-    this.r = 10; // Meteor radius
+    this.r = 12; // Meteor radius
     this.speed = 4;
     this.flameParticles = [];
 
