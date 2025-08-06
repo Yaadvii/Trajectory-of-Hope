@@ -20,11 +20,10 @@ function draw() {
     obstacles.push(new Obstacle());
   }
 
-  // Create meteor when star is near center and at specific scores
+  // Create meteor at specific scores with random positions for fair collision chances
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
-  let isNearCenter = Math.abs(player.y - height / 2) < 7; // Star is within 7 pixels of center
   
-  if (meteorScores.includes(score) && meteor === null && isNearCenter) {
+  if (meteorScores.includes(score) && meteor === null) {
     meteor = new Meteor();
   }
 
@@ -167,7 +166,7 @@ class Obstacle {
 
 class Meteor {
   constructor() {
-    this.x = width / 2; // Fixed x position at center
+    this.x = random(50, width - 50); // Random x position with margins
     this.y = 0; // Start from top
     this.r = 12; // Meteor radius
     this.speed = 4;
