@@ -3,15 +3,28 @@ let player;
 let obstacles = [];
 let score = 0;
 let bgBrightness = 0;
+let backgroundStars = [];
 
 function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
+  
+  // Generate random background stars
+  for (let i = 0; i < 15; i++) {
+    backgroundStars.push({
+      x: random(width),
+      y: random(height),
+      size: random(8, 20)
+    });
+  }
 }
 
 function draw() {
   background(bgBrightness);
+  
+  // Draw background stars
+  drawBackgroundStars();
 
   player.update();
   player.show();
@@ -45,7 +58,37 @@ function draw() {
   text("Hope: " + score, 10, 20);
 }
 
+function drawBackgroundStars() {
+  fill(255);
+  stroke(255);
+  strokeWeight(1);
+  
+  for (let star of backgroundStars) {
+    draw5PointStar(star.x, star.y, star.size);
+  }
+}
 
+function draw5PointStar(x, y, size) {
+  push();
+  translate(x, y);
+  beginShape();
+  
+  for (let i = 0; i < 5; i++) {
+    let angle = TWO_PI / 5 * i - PI/2;
+    let outerX = cos(angle) * size;
+    let outerY = sin(angle) * size;
+    vertex(outerX, outerY);
+    
+    // Inner point
+    angle += PI / 5;
+    let innerX = cos(angle) * (size * 0.4);
+    let innerY = sin(angle) * (size * 0.4);
+    vertex(innerX, innerY);
+  }
+  
+  endShape(CLOSE);
+  pop();
+}
 
 class Player {
   constructor() {
