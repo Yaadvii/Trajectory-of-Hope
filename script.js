@@ -106,9 +106,13 @@ function draw() {
     if (meteor.hits(player)) {
       noLoop(); // Game Over
       fill(255, 0, 0);
-      textSize(32);
+      textSize(24);
       textAlign(CENTER);
-      text("You lost hope.", width / 2, height / 2);
+      text("You faced a minor setback. Don't lose hope.", width / 2, height / 2 - 20);
+      
+      fill(0, 255, 0);
+      textSize(18);
+      text("Click refresh to try again", width / 2, height / 2 + 20);
     }
 
     if (meteor.offscreen()) {
