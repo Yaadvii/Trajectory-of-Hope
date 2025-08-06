@@ -267,71 +267,67 @@ class Meteor {
 
 class CelestialObject {
   constructor() {
-    this.x = random(0, width);
-    this.y = random(height + 50, height + 300); // Start below screen
-    this.type = random(['star', 'planet']);
-    this.speed = random(0.2, 0.8); // Very slow movement
+    // Choose random direction: 0=top, 1=right, 2=bottom, 3=left
+    this.direction = floor(random(4));
+    this.speed = random(0.3, 1.0); // Slightly faster for multi-directional movement
     
-    if (this.type === 'star') {
-      this.r = random(1, 3);
-      this.twinkle = random(150, 255);
-      this.twinkleSpeed = random(0.02, 0.05);
-    } else {
-      this.r = random(8, 20);
-      this.hue = random(200, 280); // Blue to purple range for space feel
-      this.saturation = random(30, 80);
-      this.brightness = random(40, 80);
+    // Set starting position based on direction
+    if (this.direction === 0) { // From top
+      this.x = random(-50, width + 50);
+      this.y = random(-100, -50);
+      this.velX = random(-0.2, 0.2);
+      this.velY = this.speed;
+    } else if (this.direction === 1) { // From right
+      this.x = random(width + 50, width + 100);
+      this.y = random(-50, height + 50);
+      this.velX = -this.speed;
+      this.velY = random(-0.2, 0.2);
+    } else if (this.direction === 2) { // From bottom
+      this.x = random(-50, width + 50);
+      this.y = random(height + 50, height + 100);
+      this.velX = random(-0.2, 0.2);
+      this.velY = -this.speed;
+    } else { // From left
+      this.x = random(-100, -50);
+      this.y = random(-50, height + 50);
+      this.velX = this.speed;
+      this.velY = random(-0.2, 0.2);
     }
+    
+    // Star properties
+    this.r = random(1, 3);
+    this.twinkle = random(150, 255);
+    this.twinkleSpeed = random(0.02, 0.05);
   }
 
   update() {
-    this.y -= this.speed;
+    this.x += this.velX;
+    this.y += this.velY;
     
-    if (this.type === 'star') {
-      this.twinkle += sin(frameCount * this.twinkleSpeed) * 20;
-      this.twinkle = constrain(this.twinkle, 100, 255);
-    }
+    this.twinkle += sin(frameCount * this.twinkleSpeed) * 20;
+    this.twinkle = constrain(this.twinkle, 100, 255);
   }
 
   show() {
     push();
     
-    if (this.type === 'star') {
-      // Draw twinkling star
-      fill(255, 255, 200, this.twinkle);
-      noStroke();
-      
-      // Main star body
-      ellipse(this.x, this.y, this.r * 2);
-      
-      // Star points
-      stroke(255, 255, 200, this.twinkle * 0.7);
-      strokeWeight(1);
-      line(this.x - this.r * 2, this.y, this.x + this.r * 2, this.y);
-      line(this.x, this.y - this.r * 2, this.x, this.y + this.r * 2);
-      
-    } else {
-      // Draw planet with subtle colors
-      colorMode(HSB);
-      fill(this.hue, this.saturation, this.brightness, 180);
-      noStroke();
-      ellipse(this.x, this.y, this.r * 2);
-      
-      // Add subtle planet rings for larger planets
-      if (this.r > 15) {
-        noFill();
-        stroke(this.hue, this.saturation * 0.5, this.brightness * 0.8, 100);
-        strokeWeight(1);
-        ellipse(this.x, this.y, this.r * 2.8);
-      }
-      
-      colorMode(RGB);
-    }
+    // Draw twinkling star
+    fill(255, 255, 200, this.twinkle);
+    noStroke();
+    
+    // Main star body
+    ellipse(this.x, this.y, this.r * 2);
+    
+    // Star points
+    stroke(255, 255, 200, this.twinkle * 0.7);
+    strokeWeight(1);
+    line(this.x - this.r * 2, this.y, this.x + this.r * 2, this.y);
+    line(this.x, this.y - this.r * 2, this.x, this.y + this.r * 2);
     
     pop();
   }
 
   offscreen() {
-    return this.y + this.r < 0;
+    return this.x < -150 || this.x > width + 150 || this.y < -150 || this.y > height + 150;
   }
 }
