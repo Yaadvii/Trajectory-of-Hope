@@ -116,7 +116,7 @@ function showWinMessage() {
 }
 
 function showWelcomeScreen() {
-  background(10, 10, 30);
+  background(0);
   celestialObjects.forEach(star => { star.update(); star.show(); });
   
   fill(255, 255, 150);
@@ -125,7 +125,7 @@ function showWelcomeScreen() {
   text("Light in the Dark", width / 2, 50);
   
   fill(255);
-  textSize(11);
+  textSize(17);
   text("Welcome to Light in the Dark — a game about hope and resilience.", width / 2, 90);
   text("Use the up (↑) and down (↓) arrow keys to guide your star through", width / 2, 110);
   text("a galaxy filled with challenges. Dodge towering asteroid belts and", width / 2, 125);
