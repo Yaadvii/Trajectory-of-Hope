@@ -166,7 +166,7 @@ class Meteor {
   constructor() {
     this.x = width / 2; // Fixed x position at center
     this.y = 0; // Start from top
-    this.r = 25; // Meteor radius
+    this.r = 6.25; // Meteor radius (1/4th of original size)
     this.speed = 4;
     this.flameParticles = [];
 
