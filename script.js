@@ -3,11 +3,17 @@ let obstacles = [];
 let score = 0;
 let bgBrightness = 0;
 let meteor = null;
+let celestialObjects = [];
 
 function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
+  
+  // Create initial celestial objects
+  for (let i = 0; i < 8; i++) {
+    celestialObjects.push(new CelestialObject());
+  }
 }
 
 function draw() {
@@ -18,6 +24,17 @@ function draw() {
 
   if (frameCount % 60 === 0) {
     obstacles.push(new Obstacle());
+  }
+
+  // Update and show celestial objects
+  for (let i = celestialObjects.length - 1; i >= 0; i--) {
+    celestialObjects[i].update();
+    celestialObjects[i].show();
+    
+    if (celestialObjects[i].offscreen()) {
+      celestialObjects.splice(i, 1);
+      celestialObjects.push(new CelestialObject());
+    }
   }
 
   // Create meteor at specific scores with random positions for fair collision chances
@@ -245,5 +262,76 @@ class Meteor {
 
   offscreen() {
     return this.y - this.r > height;
+  }
+}
+
+class CelestialObject {
+  constructor() {
+    this.x = random(0, width);
+    this.y = random(height + 50, height + 300); // Start below screen
+    this.type = random(['star', 'planet']);
+    this.speed = random(0.2, 0.8); // Very slow movement
+    
+    if (this.type === 'star') {
+      this.r = random(1, 3);
+      this.twinkle = random(150, 255);
+      this.twinkleSpeed = random(0.02, 0.05);
+    } else {
+      this.r = random(8, 20);
+      this.hue = random(200, 280); // Blue to purple range for space feel
+      this.saturation = random(30, 80);
+      this.brightness = random(40, 80);
+    }
+  }
+
+  update() {
+    this.y -= this.speed;
+    
+    if (this.type === 'star') {
+      this.twinkle += sin(frameCount * this.twinkleSpeed) * 20;
+      this.twinkle = constrain(this.twinkle, 100, 255);
+    }
+  }
+
+  show() {
+    push();
+    
+    if (this.type === 'star') {
+      // Draw twinkling star
+      fill(255, 255, 200, this.twinkle);
+      noStroke();
+      
+      // Main star body
+      ellipse(this.x, this.y, this.r * 2);
+      
+      // Star points
+      stroke(255, 255, 200, this.twinkle * 0.7);
+      strokeWeight(1);
+      line(this.x - this.r * 2, this.y, this.x + this.r * 2, this.y);
+      line(this.x, this.y - this.r * 2, this.x, this.y + this.r * 2);
+      
+    } else {
+      // Draw planet with subtle colors
+      colorMode(HSB);
+      fill(this.hue, this.saturation, this.brightness, 180);
+      noStroke();
+      ellipse(this.x, this.y, this.r * 2);
+      
+      // Add subtle planet rings for larger planets
+      if (this.r > 15) {
+        noFill();
+        stroke(this.hue, this.saturation * 0.5, this.brightness * 0.8, 100);
+        strokeWeight(1);
+        ellipse(this.x, this.y, this.r * 2.8);
+      }
+      
+      colorMode(RGB);
+    }
+    
+    pop();
+  }
+
+  offscreen() {
+    return this.y + this.r < 0;
   }
 }
