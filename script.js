@@ -62,6 +62,18 @@ function draw() {
       score++;
       player.grow(0.5);
       if (bgBrightness < 100) bgBrightness += 2;
+      
+      // End game at score 50
+      if (score >= 50) {
+        noLoop();
+        fill(0, 255, 0);
+        textSize(32);
+        textAlign(CENTER);
+        text("You reached maximum hope!", width / 2, height / 2);
+        fill(255);
+        textSize(16);
+        text("Final Score: " + score, width / 2, height / 2 + 40);
+      }
     }
   }
 
