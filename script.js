@@ -2,7 +2,6 @@
 let player;
 let obstacles = [];
 let score = 0;
-let lightRadius = 50;
 let bgBrightness = 0;
 
 function setup() {
@@ -36,23 +35,17 @@ function draw() {
     if (obstacles[i].offscreen()) {
       obstacles.splice(i, 1);
       score++;
-      if (lightRadius < 200) lightRadius += 5;
+      player.grow(0.5);
       if (bgBrightness < 100) bgBrightness += 2;
     }
   }
-
-  drawLight();
 
   fill(255);
   textSize(16);
   text("Hope: " + score, 10, 20);
 }
 
-function drawLight() {
-  noStroke();
-  fill(255, 255, 100, 80);
-  ellipse(player.x, player.y, lightRadius * 2);
-}
+
 
 class Player {
   constructor() {
@@ -65,6 +58,10 @@ class Player {
     if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
     if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
     this.y = constrain(this.y, this.r, height - this.r);
+  }
+
+  grow(amount) {
+    this.r += amount;
   }
 
   show() {
@@ -86,6 +83,10 @@ yyyyyyyyy
     // Draw the pixel art star
     push();
     translate(this.x, this.y);
+    
+    // Scale the star based on its radius
+    let scale = this.r / 20; // 20 is the initial radius
+    scale(scale);
     
     // Add glow effect
     drawingContext.shadowColor = 'yellow';
