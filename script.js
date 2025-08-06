@@ -4,6 +4,8 @@ let score = 0;
 let bgBrightness = 0;
 let meteor = null;
 let celestialObjects = [];
+let saturn = null;
+let jupiter = null;
 
 function setup() {
   createCanvas(600, 400);
@@ -29,6 +31,10 @@ function setup() {
     new CelestialObject(450, 180),
     new CelestialObject(320, 280)
   ];
+  
+  // Create Saturn and Jupiter at random positions
+  saturn = new Planet('saturn', random(50, width - 50), height + 50);
+  jupiter = new Planet('jupiter', random(50, width - 50), height + 100);
 }
 
 function draw() {
@@ -45,6 +51,26 @@ function draw() {
   for (let star of celestialObjects) {
     star.update();
     star.show();
+  }
+  
+  // Update and show Saturn
+  if (saturn) {
+    saturn.update();
+    saturn.show();
+    
+    if (saturn.offscreen()) {
+      saturn = new Planet('saturn', random(50, width - 50), height + 50);
+    }
+  }
+  
+  // Update and show Jupiter
+  if (jupiter) {
+    jupiter.update();
+    jupiter.show();
+    
+    if (jupiter.offscreen()) {
+      jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
+    }
   }
 
   // Create meteor at specific scores with random positions for fair collision chances
@@ -329,5 +355,75 @@ class CelestialObject {
     ellipse(this.x, this.y, this.r * 6);
     
     pop();
+  }
+}
+
+class Planet {
+  constructor(type, x, y) {
+    this.type = type;
+    this.x = x;
+    this.y = y;
+    this.speed = random(0.5, 1.2);
+    
+    if (type === 'saturn') {
+      this.r = random(15, 20);
+      this.color = color(255, 215, 140); // Pale yellow-beige
+    } else if (type === 'jupiter') {
+      this.r = random(18, 25);
+      this.color = color(200, 150, 100); // Brown-orange
+      this.stripeOffset = random(0, TWO_PI);
+    }
+  }
+  
+  update() {
+    this.y -= this.speed;
+  }
+  
+  show() {
+    push();
+    
+    if (this.type === 'saturn') {
+      // Draw Saturn
+      fill(this.color);
+      stroke(255, 255, 255, 100);
+      strokeWeight(1);
+      ellipse(this.x, this.y, this.r * 2);
+      
+      // Saturn's rings
+      noFill();
+      stroke(200, 200, 200, 150);
+      strokeWeight(2);
+      ellipse(this.x, this.y, this.r * 2.8);
+      strokeWeight(1);
+      ellipse(this.x, this.y, this.r * 3.2);
+      
+    } else if (this.type === 'jupiter') {
+      // Draw Jupiter with bands
+      fill(this.color);
+      stroke(255, 255, 255, 80);
+      strokeWeight(1);
+      ellipse(this.x, this.y, this.r * 2);
+      
+      // Jupiter's bands
+      noFill();
+      stroke(150, 100, 60, 120);
+      strokeWeight(1.5);
+      let bandSpacing = this.r * 0.4;
+      for (let i = -2; i <= 2; i++) {
+        let bandY = this.y + i * bandSpacing;
+        arc(this.x, bandY, this.r * 1.8, this.r * 0.3, 0, PI);
+      }
+      
+      // Great Red Spot
+      fill(180, 80, 60, 150);
+      noStroke();
+      ellipse(this.x + this.r * 0.3, this.y + this.r * 0.2, this.r * 0.4, this.r * 0.25);
+    }
+    
+    pop();
+  }
+  
+  offscreen() {
+    return this.y + this.r < 0;
   }
 }
