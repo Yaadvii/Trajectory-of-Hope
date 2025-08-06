@@ -109,7 +109,14 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.w = 20;
-    this.h = random(40, 150);
+    
+    // 30% chance to create a tall obstacle that reaches height/2
+    if (random() < 0.3) {
+      this.h = height / 2; // 200 pixels tall
+    } else {
+      this.h = random(40, 150);
+    }
+    
     this.y = random([0, height - this.h]);
     this.speed = 3;
   }
