@@ -22,7 +22,7 @@ function draw() {
 
   // Create meteor when star is near center and at specific scores
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
-  let isNearCenter = Math.abs(player.y - height / 2) < 50; // Star is within 50 pixels of center
+  let isNearCenter = Math.abs(player.y - height / 2) < 7; // Star is within 7 pixels of center
   
   if (meteorScores.includes(score) && meteor === null && isNearCenter) {
     meteor = new Meteor();
