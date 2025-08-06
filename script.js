@@ -1,4 +1,3 @@
-
 let player;
 let obstacles = [];
 let score = 0;
@@ -21,8 +20,8 @@ function draw() {
     obstacles.push(new Obstacle());
   }
 
-  // Create meteor at scores 5, 7, and 22
-  if ((score === 5 || score === 7 || score === 22) && meteor === null) {
+  // Create meteor at scores 2, 15, 5, 7, 19, 22, 26
+  if ((score === 2 || score === 15 || score === 5 || score === 7 || score === 19 || score === 22 || score === 26) && meteor === null) {
     meteor = new Meteor();
   }
 
@@ -30,7 +29,7 @@ function draw() {
   if (meteor) {
     meteor.update();
     meteor.show();
-    
+
     if (meteor.hits(player)) {
       noLoop(); // Game Over
       fill(255, 0, 0);
@@ -38,7 +37,7 @@ function draw() {
       textAlign(CENTER);
       text("You lost hope.", width / 2, height / 2);
     }
-    
+
     if (meteor.offscreen()) {
       meteor = null;
     }
@@ -101,30 +100,30 @@ yyyyyyyyy
 ..yyyyy..
 ...yyy...
 ....y...,`;
-      
+
       // Create the pixel art sprite
       this.starSprite = spriteArt(starPattern, 3);
     }
-    
+
     // Draw the pixel art star
     push();
     translate(this.x, this.y);
-    
+
     // Scale the star based on its radius
     let scaleAmount = this.r / 20; // 20 is the initial radius
     scale(scaleAmount);
-    
+
     // Add glow effect
     drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
-    
+
     // Draw the star sprite
     imageMode(CENTER);
     image(this.starSprite, 0, 0);
-    
+
     // Reset shadow
     drawingContext.shadowBlur = 0;
-    
+
     pop();
   }
 }
@@ -133,14 +132,14 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.w = 20;
-    
+
     // 30% chance to create a tall obstacle that reaches height/2
     if (random() < 0.3) {
       this.h = height / 2; // 200 pixels tall
     } else {
       this.h = random(40, 150);
     }
-    
+
     this.y = random([0, height - this.h]);
     this.speed = 3;
   }
@@ -170,7 +169,7 @@ class Meteor {
     this.r = 25; // Meteor radius
     this.speed = 4;
     this.flameParticles = [];
-    
+
     // Create initial flame particles
     for (let i = 0; i < 8; i++) {
       this.flameParticles.push({
@@ -184,7 +183,7 @@ class Meteor {
 
   update() {
     this.y += this.speed;
-    
+
     // Update flame particles
     for (let particle of this.flameParticles) {
       particle.x = random(-this.r * 0.8, this.r * 0.8);
@@ -196,32 +195,32 @@ class Meteor {
   show() {
     push();
     translate(this.x, this.y);
-    
+
     // Draw flame trails
     for (let particle of this.flameParticles) {
       // Orange flame
       fill(255, 140, 0, particle.alpha * 0.8);
       noStroke();
       ellipse(particle.x, particle.y, particle.size);
-      
+
       // Yellow highlights
       fill(255, 255, 0, particle.alpha * 0.6);
       ellipse(particle.x, particle.y, particle.size * 0.6);
     }
-    
+
     // Draw meteor body
     fill(80, 50, 30); // Dark brown/black meteor
     stroke(255, 100, 0); // Orange glow outline
     strokeWeight(2);
     ellipse(0, 0, this.r * 2);
-    
+
     // Add meteor surface details
     fill(120, 80, 50);
     noStroke();
     ellipse(-5, -3, 6);
     ellipse(7, 2, 4);
     ellipse(-2, 8, 5);
-    
+
     pop();
   }
 
