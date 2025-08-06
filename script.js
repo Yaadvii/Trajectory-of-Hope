@@ -68,13 +68,15 @@ class Player {
     if (!this.starSprite) {
       // Create pixel art star pattern
       let starPattern = `
+....y...
 ...yy...
 ..yyyy..
 .yyyyyy.
 yyyyyyyyy
 .yyyyyy.
 ..yyyy..
-...yy...`;
+...yy...
+....y...`;
       
       // Create the pixel art sprite
       this.starSprite = spriteArt(starPattern, 3);
@@ -85,8 +87,8 @@ yyyyyyyyy
     translate(this.x, this.y);
     
     // Scale the star based on its radius
-    let scaleAmount = this.r / 20; // 20 is the initial radius
-    scale(scaleAmount);
+    let scale = this.r / 20; // 20 is the initial radius
+    scale(scale);
     
     // Add glow effect
     drawingContext.shadowColor = 'yellow';
