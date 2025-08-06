@@ -10,10 +10,25 @@ function setup() {
   player = new Player();
   obstacles.push(new Obstacle());
   
-  // Create initial celestial objects
-  for (let i = 0; i < 8; i++) {
-    celestialObjects.push(new CelestialObject());
-  }
+  // Create fixed celestial objects at strategic positions
+  celestialObjects = [
+    new CelestialObject(50, 60),
+    new CelestialObject(150, 30),
+    new CelestialObject(280, 80),
+    new CelestialObject(420, 45),
+    new CelestialObject(520, 90),
+    new CelestialObject(80, 220),
+    new CelestialObject(200, 180),
+    new CelestialObject(350, 200),
+    new CelestialObject(480, 250),
+    new CelestialObject(550, 320),
+    new CelestialObject(30, 350),
+    new CelestialObject(120, 300),
+    new CelestialObject(250, 340),
+    new CelestialObject(380, 360),
+    new CelestialObject(450, 180),
+    new CelestialObject(320, 280)
+  ];
 }
 
 function draw() {
@@ -27,14 +42,9 @@ function draw() {
   }
 
   // Update and show celestial objects
-  for (let i = celestialObjects.length - 1; i >= 0; i--) {
-    celestialObjects[i].update();
-    celestialObjects[i].show();
-    
-    if (celestialObjects[i].offscreen()) {
-      celestialObjects.splice(i, 1);
-      celestialObjects.push(new CelestialObject());
-    }
+  for (let star of celestialObjects) {
+    star.update();
+    star.show();
   }
 
   // Create meteor at specific scores with random positions for fair collision chances
@@ -266,68 +276,45 @@ class Meteor {
 }
 
 class CelestialObject {
-  constructor() {
-    // Choose random direction: 0=top, 1=right, 2=bottom, 3=left
-    this.direction = floor(random(4));
-    this.speed = random(0.3, 1.0); // Slightly faster for multi-directional movement
-    
-    // Set starting position based on direction
-    if (this.direction === 0) { // From top
-      this.x = random(-50, width + 50);
-      this.y = random(-100, -50);
-      this.velX = random(-0.2, 0.2);
-      this.velY = this.speed;
-    } else if (this.direction === 1) { // From right
-      this.x = random(width + 50, width + 100);
-      this.y = random(-50, height + 50);
-      this.velX = -this.speed;
-      this.velY = random(-0.2, 0.2);
-    } else if (this.direction === 2) { // From bottom
-      this.x = random(-50, width + 50);
-      this.y = random(height + 50, height + 100);
-      this.velX = random(-0.2, 0.2);
-      this.velY = -this.speed;
-    } else { // From left
-      this.x = random(-100, -50);
-      this.y = random(-50, height + 50);
-      this.velX = this.speed;
-      this.velY = random(-0.2, 0.2);
-    }
+  constructor(x, y) {
+    // Fixed position
+    this.x = x;
+    this.y = y;
     
     // Star properties
-    this.r = random(1, 3);
+    this.r = random(1, 2.5);
     this.twinkle = random(150, 255);
-    this.twinkleSpeed = random(0.02, 0.05);
+    this.twinkleSpeed = random(0.015, 0.04);
+    this.twinkleOffset = random(0, TWO_PI); // Random starting phase for varied twinkling
   }
 
   update() {
-    this.x += this.velX;
-    this.y += this.velY;
-    
-    this.twinkle += sin(frameCount * this.twinkleSpeed) * 20;
-    this.twinkle = constrain(this.twinkle, 100, 255);
+    // Only update twinkling effect
+    this.twinkle = 180 + sin(frameCount * this.twinkleSpeed + this.twinkleOffset) * 75;
+    this.twinkle = constrain(this.twinkle, 80, 255);
   }
 
   show() {
     push();
     
-    // Draw twinkling star
-    fill(255, 255, 200, this.twinkle);
+    // Draw twinkling star with subtle glow
+    fill(255, 255, 200, this.twinkle * 0.8);
     noStroke();
     
     // Main star body
     ellipse(this.x, this.y, this.r * 2);
     
-    // Star points
-    stroke(255, 255, 200, this.twinkle * 0.7);
-    strokeWeight(1);
-    line(this.x - this.r * 2, this.y, this.x + this.r * 2, this.y);
-    line(this.x, this.y - this.r * 2, this.x, this.y + this.r * 2);
+    // Star points (dimmer than main body)
+    stroke(255, 255, 200, this.twinkle * 0.4);
+    strokeWeight(0.8);
+    line(this.x - this.r * 1.5, this.y, this.x + this.r * 1.5, this.y);
+    line(this.x, this.y - this.r * 1.5, this.x, this.y + this.r * 1.5);
+    
+    // Subtle glow effect
+    fill(255, 255, 200, this.twinkle * 0.2);
+    noStroke();
+    ellipse(this.x, this.y, this.r * 4);
     
     pop();
-  }
-
-  offscreen() {
-    return this.x < -150 || this.x > width + 150 || this.y < -150 || this.y > height + 150;
   }
 }
