@@ -1,3 +1,4 @@
+
 let player;
 let obstacles = [];
 let score = 0;
@@ -61,8 +62,8 @@ class Player {
   }
 
   update() {
-    if (kb.pressing('ArrowUp')) this.y -= 5;
-    if (kb.pressing('ArrowDown')) this.y += 5;
+    if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
+    if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
     this.y = constrain(this.y, this.r, height - this.r);
   }
 
@@ -97,3 +98,4 @@ class Obstacle {
   offscreen() {
     return this.x + this.w < 0;
   }
+}
