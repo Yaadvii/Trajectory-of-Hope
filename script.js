@@ -238,38 +238,14 @@ class Obstacle {
     
     while (stoneHeight < this.h) {
       let stone = {
-        x: this.x + random(-5, 5), // Reduced horizontal variation for better touching
-        y: currentY - random(8, 15), // Reduced gap between stones
+        x: this.x + random(-8, 8), // Slight horizontal variation
+        y: currentY - random(12, 20),
         w: random(15, 25),
         h: random(12, 18),
         rotation: random(0, TWO_PI),
         color: random(['#4a4a4a', '#5a5a5a', '#3a3a3a', '#6a6a6a']),
         craters: []
       };
-      
-      // Ensure stones touch by adjusting position based on previous stone
-      if (this.stones.length > 0) {
-        let prevStone = this.stones[this.stones.length - 1];
-        let minDistance = (stone.h + prevStone.h) / 2 - 3; // Overlap by 3 pixels
-        let actualDistance = prevStone.y - stone.y;
-        
-        if (actualDistance > minDistance) {
-          stone.y = prevStone.y - minDistance;
-        }
-        
-        // Also ensure horizontal touching for varied formations
-        if (random() < 0.4) { // 40% chance for horizontal clustering
-          let horizontalOffset = random(-stone.w/2, stone.w/2);
-          stone.x = prevStone.x + horizontalOffset;
-          
-          // Make sure stones overlap slightly horizontally too
-          let horizontalDistance = abs(stone.x - prevStone.x);
-          let maxHorizontalDistance = (stone.w + prevStone.w) / 2 - 2;
-          if (horizontalDistance > maxHorizontalDistance) {
-            stone.x = prevStone.x + (stone.x > prevStone.x ? maxHorizontalDistance : -maxHorizontalDistance);
-          }
-        }
-      }
       
       // Add small craters to stones
       for (let i = 0; i < random(1, 3); i++) {
