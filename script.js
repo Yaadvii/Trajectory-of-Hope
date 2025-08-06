@@ -68,47 +68,37 @@ class Player {
   }
 
   show() {
+    if (!this.starSprite) {
+      // Create pixel art star pattern
+      let starPattern = `
+...yy...
+..yyyy..
+.yyyyyy.
+yyyyyyyyy
+.yyyyyy.
+..yyyy..
+...yy...`;
+      
+      // Create the pixel art sprite
+      this.starSprite = spriteArt(starPattern, 3);
+    }
+    
+    // Draw the pixel art star
     push();
     translate(this.x, this.y);
     
-    // Draw outer glow effect
-    noStroke();
-    fill(255, 255, 0, 30);
-    this.drawStar(0, 0, this.r * 1.2, this.r * 2.2, 5);
+    // Add glow effect
+    drawingContext.shadowColor = 'yellow';
+    drawingContext.shadowBlur = 15;
     
-    // Draw main star body
-    fill(255, 215, 0);
-    stroke(255, 255, 100);
-    strokeWeight(2);
-    this.drawStar(0, 0, this.r * 0.6, this.r * 1.4, 5);
+    // Draw the star sprite
+    imageMode(CENTER);
+    image(this.starSprite, 0, 0);
     
-    // Draw inner bright core
-    noStroke();
-    fill(255, 255, 200);
-    this.drawStar(0, 0, this.r * 0.3, this.r * 0.7, 5);
-    
-    // Add sparkle points
-    fill(255, 255, 255);
-    ellipse(-this.r * 0.4, -this.r * 0.4, 3, 3);
-    ellipse(this.r * 0.3, -this.r * 0.2, 2, 2);
-    ellipse(this.r * 0.1, this.r * 0.5, 2, 2);
+    // Reset shadow
+    drawingContext.shadowBlur = 0;
     
     pop();
-  }
-
-  drawStar(x, y, radius1, radius2, npoints) {
-    let angle = TWO_PI / npoints;
-    let halfAngle = angle / 2.0;
-    beginShape();
-    for (let a = -PI/2; a < TWO_PI - PI/2; a += angle) {
-      let sx = cos(a) * radius2;
-      let sy = sin(a) * radius2;
-      vertex(x + sx, y + sy);
-      sx = cos(a + halfAngle) * radius1;
-      sy = sin(a + halfAngle) * radius1;
-      vertex(x + sx, y + sy);
-    }
-    endShape(CLOSE);
   }
 }
 
