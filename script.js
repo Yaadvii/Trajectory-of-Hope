@@ -73,17 +73,12 @@ function draw5PointStar(x, y, size) {
   translate(x, y);
   beginShape();
   
-  for (let i = 0; i < 5; i++) {
-    let angle = TWO_PI / 5 * i - PI/2;
-    let outerX = cos(angle) * size;
-    let outerY = sin(angle) * size;
-    vertex(outerX, outerY);
-    
-    // Inner point
-    angle += PI / 5;
-    let innerX = cos(angle) * (size * 0.4);
-    let innerY = sin(angle) * (size * 0.4);
-    vertex(innerX, innerY);
+  for (let i = 0; i < 10; i++) {
+    let angle = TWO_PI / 10 * i - PI/2;
+    let radius = (i % 2 === 0) ? size : size * 0.4;
+    let starX = cos(angle) * radius;
+    let starY = sin(angle) * radius;
+    vertex(starX, starY);
   }
   
   endShape(CLOSE);
