@@ -1,46 +1,21 @@
-let player;
-let obstacles = [];
-let score = 0;
-let bgBrightness = 0;
-let meteor = null;
-let celestialObjects = [];
-let saturn = null;
-let jupiter = null;
-let planetVisible = false;
+let player, obstacles = [], score = 0, bgBrightness = 0, meteor = null;
+let celestialObjects = [], saturn = null, jupiter = null, planetVisible = false;
 
 function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
 
-  // Create fixed celestial objects at strategic positions
-  celestialObjects = [
-    new CelestialObject(50, 60),
-    new CelestialObject(150, 30),
-    new CelestialObject(280, 80),
-    new CelestialObject(420, 45),
-    new CelestialObject(520, 90),
-    new CelestialObject(80, 220),
-    new CelestialObject(200, 180),
-    new CelestialObject(350, 200),
-    new CelestialObject(480, 250),
-    new CelestialObject(550, 320),
-    new CelestialObject(30, 350),
-    new CelestialObject(120, 300),
-    new CelestialObject(250, 340),
-    new CelestialObject(380, 360),
-    new CelestialObject(450, 180),
-    new CelestialObject(320, 280)
+  // Create fixed stars at strategic positions
+  let starPositions = [
+    [50, 60], [150, 30], [280, 80], [420, 45], [520, 90],
+    [80, 220], [200, 180], [350, 200], [480, 250], [550, 320],
+    [30, 350], [120, 300], [250, 340], [380, 360], [450, 180], [320, 280]
   ];
+  celestialObjects = starPositions.map(pos => new CelestialObject(pos[0], pos[1]));
 
-  // Create only one planet initially (randomly choose between Saturn and Jupiter)
-  if (random() < 0.5) {
-    saturn = new Planet('saturn', random(50, width - 50), height + 50);
-    planetVisible = true;
-  } else {
-    jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
-    planetVisible = true;
-  }
+  // Spawn initial planet
+  spawnPlanet();
 }
 
 function draw() {
@@ -49,91 +24,35 @@ function draw() {
   player.update();
   player.show();
 
-  if (frameCount % 60 === 0) {
-    obstacles.push(new Obstacle());
-  }
+  if (frameCount % 60 === 0) obstacles.push(new Obstacle());
 
-  // Update and show celestial objects
-  for (let star of celestialObjects) {
-    star.update();
-    star.show();
-  }
+  // Update celestial objects
+  celestialObjects.forEach(star => { star.update(); star.show(); });
 
-  // Update and show Saturn
-  if (saturn) {
-    saturn.update();
-    saturn.show();
+  // Handle planets
+  updatePlanet(saturn, 'saturn');
+  updatePlanet(jupiter, 'jupiter');
 
-    if (saturn.offscreen()) {
-      saturn = null;
-      planetVisible = false;
-    }
-  }
+  if (!planetVisible) spawnPlanet();
 
-  // Update and show Jupiter
-  if (jupiter) {
-    jupiter.update();
-    jupiter.show();
-
-    if (jupiter.offscreen()) {
-      jupiter = null;
-      planetVisible = false;
-    }
-  }
-
-  // Spawn a new planet only if no planet is currently visible
-  if (!planetVisible && !saturn && !jupiter) {
-    if (random() < 0.5) {
-      saturn = new Planet('saturn', random(50, width - 50), height + 50);
-    } else {
-      jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
-    }
-    planetVisible = true;
-  }
-
-  // Create meteor at specific scores with random positions for fair collision chances
+  // Handle meteors
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
+  if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
 
-  if (meteorScores.includes(score) && meteor === null) {
-    meteor = new Meteor();
-  }
-
-  // Update and show meteor
   if (meteor) {
     meteor.update();
     meteor.show();
-
-    if (meteor.hits(player)) {
-      noLoop(); // Game Over
-      fill(255, 0, 0);
-      textSize(24);
-      textAlign(CENTER);
-      text("You faced a minor setback. Don't lose hope.", width / 2, height / 2 - 20);
-
-      fill(0, 255, 0);
-      textSize(18);
-      text("Click refresh to try again", width / 2, height / 2 + 20);
-    }
-
-    if (meteor.offscreen()) {
-      meteor = null;
-    }
+    if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope.");
+    if (meteor.offscreen()) meteor = null;
   }
 
+  // Handle obstacles
   for (let i = obstacles.length - 1; i >= 0; i--) {
     obstacles[i].update();
     obstacles[i].show();
 
     if (obstacles[i].hits(player)) {
-      noLoop(); // Game Over
-      fill(255, 0, 0);
-      textSize(24);
-      textAlign(CENTER);
-      text("You faced an obstacle. Don't lose hope.", width / 2, height / 2 - 20);
-
-      fill(0, 255, 0);
-      textSize(18);
-      text("Click refresh to try again", width / 2, height / 2 + 20);
+      gameOver("You faced an obstacle. Don't lose hope.");
     }
 
     if (obstacles[i].offscreen()) {
@@ -142,30 +61,64 @@ function draw() {
       player.grow(0.5);
       if (bgBrightness < 100) bgBrightness += 2;
 
-      // End game at score 50
       if (score >= 50) {
         noLoop();
-        fill(0, 255, 0);
-        textSize(24);
-        textAlign(CENTER);
-        text("Congratulations! You've discovered that hope isn't just", width / 2, height / 2 - 60);
-        text("about reaching the destination - it's about growing", width / 2, height / 2 - 40);
-        text("stronger with every challenge you face.", width / 2, height / 2 - 20);
-        text("You overcame all obstacles and your light", width / 2, height / 2 + 10);
-        text("now shines brightest in the cosmos!", width / 2, height / 2 + 30);
-        fill(255, 255, 200);
-        textSize(16);
-        text("Final Score: " + score, width / 2, height / 2 + 60);
+        showWinMessage();
       }
     }
   }
 
+  // Score display
   fill(255);
   textSize(16);
   text("Obstacles overcome: " + score, 10, 20);
 }
 
+function spawnPlanet() {
+  if (random() < 0.5) {
+    saturn = new Planet('saturn', random(50, width - 50), height + 50);
+  } else {
+    jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
+  }
+  planetVisible = true;
+}
 
+function updatePlanet(planet, type) {
+  if (planet) {
+    planet.update();
+    planet.show();
+    if (planet.offscreen()) {
+      if (type === 'saturn') saturn = null;
+      else jupiter = null;
+      planetVisible = false;
+    }
+  }
+}
+
+function gameOver(message) {
+  noLoop();
+  fill(255, 0, 0);
+  textSize(24);
+  textAlign(CENTER);
+  text(message, width / 2, height / 2 - 20);
+  fill(0, 255, 0);
+  textSize(18);
+  text("Click refresh to try again", width / 2, height / 2 + 20);
+}
+
+function showWinMessage() {
+  fill(0, 255, 0);
+  textSize(24);
+  textAlign(CENTER);
+  text("Congratulations! You've discovered that hope isn't just", width / 2, height / 2 - 60);
+  text("about reaching the destination - it's about growing", width / 2, height / 2 - 40);
+  text("stronger with every challenge you face.", width / 2, height / 2 - 20);
+  text("You overcame all obstacles and your light", width / 2, height / 2 + 10);
+  text("now shines brightest in the cosmos!", width / 2, height / 2 + 30);
+  fill(255, 255, 200);
+  textSize(16);
+  text("Final Score: " + score, width / 2, height / 2 + 60);
+}
 
 class Player {
   constructor() {
@@ -186,9 +139,7 @@ class Player {
 
   show() {
     if (!this.starSprite) {
-      // Create pixel art star pattern
-      let starPattern = `
-....y...,
+      let starPattern = `....y...,
 ...yyy...
 ..yyyyy..
 .yyyyyyy.
@@ -197,30 +148,21 @@ yyyyyyyyy
 ..yyyyy..
 ...yyy...
 ....y...,`;
-
-      // Create the pixel art sprite
       this.starSprite = spriteArt(starPattern, 3);
     }
 
-    // Draw the pixel art star
     push();
     translate(this.x, this.y);
-
-    // Scale the star based on its radius
-    let scaleAmount = this.r / 20; // 20 is the initial radius
+    let scaleAmount = this.r / 20;
     scale(scaleAmount);
 
-    // Add glow effect
     drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
 
-    // Draw the star sprite
     imageMode(CENTER);
     image(this.starSprite, 0, 0);
 
-    // Reset shadow
     drawingContext.shadowBlur = 0;
-
     pop();
   }
 }
@@ -229,28 +171,19 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.speed = 3;
-    this.stones = [];
-
-    // 30% chance to create a tall obstacle that reaches height/2
-    if (random() < 0.3) {
-      this.h = height / 2; // 200 pixels tall
-    } else {
-      this.h = random(40, 150);
-    }
-
+    this.h = random() < 0.3 ? height / 2 : random(40, 150);
     this.y = random([0, height - this.h]);
-
-    // Create stacked stones for asteroid belt effect
+    this.stones = [];
     this.createStones();
   }
 
   createStones() {
-    let currentY = this.y + this.h; // Start from bottom
+    let currentY = this.y + this.h;
     let stoneHeight = 0;
 
     while (stoneHeight < this.h) {
       let stone = {
-        x: this.x + random(-8, 8), // Slight horizontal variation
+        x: this.x + random(-8, 8),
         y: currentY - random(12, 20),
         w: random(15, 25),
         h: random(12, 18),
@@ -259,7 +192,6 @@ class Obstacle {
         craters: []
       };
 
-      // Add small craters to stones
       for (let i = 0; i < random(1, 3); i++) {
         stone.craters.push({
           x: random(-stone.w/2, stone.w/2),
@@ -276,120 +208,89 @@ class Obstacle {
 
   update() {
     this.x -= this.speed;
-    // Update all stone positions
-    for (let stone of this.stones) {
-      stone.x -= this.speed;
-    }
+    this.stones.forEach(stone => stone.x -= this.speed);
   }
 
   show() {
-    for (let stone of this.stones) {
+    this.stones.forEach(stone => {
       push();
       translate(stone.x + stone.w/2, stone.y + stone.h/2);
       rotate(stone.rotation);
 
-      // Main stone body
       fill(stone.color);
       stroke(100);
       strokeWeight(1);
       ellipse(0, 0, stone.w, stone.h);
 
-      // Add texture with darker craters
       fill(30);
       noStroke();
-      for (let crater of stone.craters) {
-        ellipse(crater.x, crater.y, crater.r);
-      }
+      stone.craters.forEach(crater => ellipse(crater.x, crater.y, crater.r));
 
-      // Add highlights for 3D effect
       fill(150, 150, 150, 80);
       ellipse(-stone.w/4, -stone.h/4, stone.w/3, stone.h/3);
-
       pop();
-    }
+    });
   }
 
   hits(player) {
-    // Check collision with each stone
-    for (let stone of this.stones) {
+    return this.stones.some(stone => {
       let distance = dist(player.x, player.y, stone.x + stone.w/2, stone.y + stone.h/2);
-      if (distance < (max(stone.w, stone.h)/2 + player.r)) {
-        return true;
-      }
-    }
-    return false;
+      return distance < (max(stone.w, stone.h)/2 + player.r);
+    });
   }
 
   offscreen() {
-    return this.x < -50; // Account for stone width variations
+    return this.x < -50;
   }
 }
 
 class Meteor {
   constructor() {
-    this.x = random(50, width - 50); // Random x position with margins
-    this.y = 0; // Start from top
-    this.r = 12; // Meteor radius
+    this.x = random(50, width - 50);
+    this.y = 0;
+    this.r = 12;
     this.speed = 4;
-    this.flameParticles = [];
-
-    // Create initial flame particles
-    for (let i = 0; i < 8; i++) {
-      this.flameParticles.push({
-        x: 0,
-        y: 0,
-        size: random(3, 8),
-        alpha: random(150, 255)
-      });
-    }
+    this.flameParticles = Array(8).fill().map(() => ({
+      x: 0, y: 0, size: random(3, 8), alpha: random(150, 255)
+    }));
   }
 
   update() {
     this.y += this.speed;
-
-    // Update flame particles
-    for (let particle of this.flameParticles) {
+    this.flameParticles.forEach(particle => {
       particle.x = random(-this.r * 0.8, this.r * 0.8);
       particle.y = random(-this.r * 1.5, -this.r * 0.5);
       particle.alpha = random(100, 255);
-    }
+    });
   }
 
   show() {
     push();
     translate(this.x, this.y);
 
-    // Draw flame trails
-    for (let particle of this.flameParticles) {
-      // Orange flame
+    this.flameParticles.forEach(particle => {
       fill(255, 140, 0, particle.alpha * 0.8);
       noStroke();
       ellipse(particle.x, particle.y, particle.size);
-
-      // Yellow highlights
       fill(255, 255, 0, particle.alpha * 0.6);
       ellipse(particle.x, particle.y, particle.size * 0.6);
-    }
+    });
 
-    // Draw meteor body
-    fill(80, 50, 30); // Dark brown/black meteor
-    stroke(255, 100, 0); // Orange glow outline
+    fill(80, 50, 30);
+    stroke(255, 100, 0);
     strokeWeight(2);
     ellipse(0, 0, this.r * 2);
 
-    // Add meteor surface details
     fill(120, 80, 50);
     noStroke();
     ellipse(-5, -3, 6);
     ellipse(7, 2, 4);
     ellipse(-2, 8, 5);
-
     pop();
   }
 
   hits(player) {
-    let distance = dist(this.x, this.y, player.x, player.y);
-    return distance < (this.r + player.r);
+    return dist(this.x, this.y, player.x, player.y) < (this.r + player.r);
   }
 
   offscreen() {
@@ -399,57 +300,39 @@ class Meteor {
 
 class CelestialObject {
   constructor(x, y) {
-    // Fixed position
     this.x = x;
     this.y = y;
-
-    // Star properties
     this.r = random(1, 2.5);
     this.twinkle = random(150, 255);
-    this.twinkleSpeed = random(0.015, 0.04);
-    this.twinkleOffset = random(0, TWO_PI); // Random starting phase for varied twinkling
   }
 
   update() {
-    // Random twinkling effect
-    if (random() < 0.05) { // 5% chance each frame to change twinkle
-      this.twinkle = random(80, 255);
-    }
+    if (random() < 0.05) this.twinkle = random(80, 255);
   }
 
   show() {
     push();
-
-    // Draw star shape with prominent points
     fill(255, 255, 200, this.twinkle);
     stroke(255, 255, 150, this.twinkle * 0.9);
     strokeWeight(1.2);
 
-    // Create a 4-pointed star shape
     beginShape();
-    // Top point
     vertex(this.x, this.y - this.r * 2);
     vertex(this.x - this.r * 0.3, this.y - this.r * 0.3);
-    // Left point
     vertex(this.x - this.r * 2, this.y);
     vertex(this.x - this.r * 0.3, this.y + this.r * 0.3);
-    // Bottom point
     vertex(this.x, this.y + this.r * 2);
     vertex(this.x + this.r * 0.3, this.y + this.r * 0.3);
-    // Right point
     vertex(this.x + this.r * 2, this.y);
     vertex(this.x + this.r * 0.3, this.y - this.r * 0.3);
     endShape(CLOSE);
 
-    // Add center glow
     fill(255, 255, 200, this.twinkle * 0.8);
     noStroke();
     ellipse(this.x, this.y, this.r * 0.8);
 
-    // Subtle outer glow effect
     fill(255, 255, 200, this.twinkle * 0.1);
     ellipse(this.x, this.y, this.r * 6);
-
     pop();
   }
 }
@@ -463,10 +346,10 @@ class Planet {
 
     if (type === 'saturn') {
       this.r = random(15, 20);
-      this.color = color(255, 215, 140); // Pale yellow-beige
-    } else if (type === 'jupiter') {
+      this.color = color(255, 215, 140);
+    } else {
       this.r = random(18, 25);
-      this.color = color(200, 150, 100); // Brown-orange
+      this.color = color(200, 150, 100);
       this.stripeOffset = random(0, TWO_PI);
     }
   }
@@ -477,45 +360,29 @@ class Planet {
 
   show() {
     push();
+    fill(this.color);
+    stroke(255, 255, 255, 100);
+    strokeWeight(1);
+    ellipse(this.x, this.y, this.r * 2);
 
     if (this.type === 'saturn') {
-      // Draw Saturn
-      fill(this.color);
-      stroke(255, 255, 255, 100);
-      strokeWeight(1);
-      ellipse(this.x, this.y, this.r * 2);
-
-      // Saturn's rings
       noFill();
       stroke(200, 200, 200, 150);
       strokeWeight(2);
       ellipse(this.x, this.y, this.r * 2.8);
       strokeWeight(1);
       ellipse(this.x, this.y, this.r * 3.2);
-
-    } else if (this.type === 'jupiter') {
-      // Draw Jupiter with bands
-      fill(this.color);
-      stroke(255, 255, 255, 80);
-      strokeWeight(1);
-      ellipse(this.x, this.y, this.r * 2);
-
-      // Jupiter's bands
+    } else {
       noFill();
       stroke(150, 100, 60, 120);
       strokeWeight(1.5);
-      let bandSpacing = this.r * 0.4;
       for (let i = -2; i <= 2; i++) {
-        let bandY = this.y + i * bandSpacing;
-        arc(this.x, bandY, this.r * 1.8, this.r * 0.3, 0, PI);
+        arc(this.x, this.y + i * this.r * 0.4, this.r * 1.8, this.r * 0.3, 0, PI);
       }
-
-      // Great Red Spot
       fill(180, 80, 60, 150);
       noStroke();
       ellipse(this.x + this.r * 0.3, this.y + this.r * 0.2, this.r * 0.4, this.r * 0.25);
     }
-
     pop();
   }
 
