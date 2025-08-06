@@ -171,7 +171,7 @@ class Player {
   constructor() {
     this.x = 100;
     this.y = height / 2;
-    this.r = 20;
+    this.r = 10;
   }
 
   update() {
