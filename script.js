@@ -60,7 +60,6 @@ function draw() {
     if (obstacles[i].offscreen()) {
       obstacles.splice(i, 1);
       score++;
-      player.grow(0.5);
       if (bgBrightness < 100) bgBrightness += 2;
       if (score >= 50) {
         noLoop();
@@ -142,9 +141,7 @@ class Player {
       this.y = constrain(this.y, this.r, height - this.r);
     }
   }
-  grow(amount) {
-    this.r += amount;
-  }
+  
   show() {
     if (!this.starSprite) {
       let starPattern = 
@@ -180,76 +177,36 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.speed = 3;
-    this.h = random() < 0.3 ? height / 2 : random(40, 150);
+    this.w = 20;
+    this.h = random() < 0.3 ? height / 2 : random(60, 180);
     this.y = random([0, height - this.h]);
-    this.stones = [];
-    this.createStones();
-  }
-
-  createStones() {
-    let currentY = this.y + this.h;
-    let stoneHeight = 0;
-
-    while (stoneHeight < this.h) {
-      let stone = {
-        x: this.x + random(-8, 8),
-        y: currentY - random(12, 20),
-        w: random(15, 25),
-        h: random(12, 18),
-        rotation: random(0, TWO_PI),
-        color: random(['#4a4a4a', '#5a5a5a', '#3a3a3a', '#6a6a6a']),
-        craters: []
-      };
-
-      for (let i = 0; i < random(1, 3); i++) {
-        stone.craters.push({
-          x: random(-stone.w/2, stone.w/2),
-          y: random(-stone.h/2, stone.h/2),
-          r: random(2, 4)
-        });
-      }
-
-      this.stones.push(stone);
-      currentY = stone.y;
-      stoneHeight += stone.h;
-    }
   }
 
   update() {
     this.x -= this.speed;
-    this.stones.forEach(stone => stone.x -= this.speed);
   }
 
   show() {
-    this.stones.forEach(stone => {
-      push();
-      translate(stone.x + stone.w/2, stone.y + stone.h/2);
-      rotate(stone.rotation);
-
-      fill(stone.color);
-      stroke(100);
-      strokeWeight(1);
-      ellipse(0, 0, stone.w, stone.h);
-
-      fill(30);
-      noStroke();
-      stone.craters.forEach(crater => ellipse(crater.x, crater.y, crater.r));
-
-      fill(150, 150, 150, 80);
-      ellipse(-stone.w/4, -stone.h/4, stone.w/3, stone.h/3);
-      pop();
-    });
+    fill(100, 100, 120);
+    stroke(80, 80, 100);
+    strokeWeight(2);
+    rect(this.x, this.y, this.w, this.h);
+    
+    // Add some simple shading
+    fill(120, 120, 140);
+    noStroke();
+    rect(this.x + 2, this.y + 2, this.w - 4, this.h - 4);
   }
 
   hits(player) {
-    return this.stones.some(stone => {
-      let distance = dist(player.x, player.y, stone.x + stone.w/2, stone.y + stone.h/2);
-      return distance < (max(stone.w, stone.h)/2 + player.r);
-    });
+    return player.x + player.r > this.x && 
+           player.x - player.r < this.x + this.w &&
+           player.y + player.r > this.y && 
+           player.y - player.r < this.y + this.h;
   }
 
   offscreen() {
-    return this.x < -50;
+    return this.x + this.w < 0;
   }
 }
 
