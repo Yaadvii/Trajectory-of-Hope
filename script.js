@@ -162,9 +162,6 @@ class Player {
     pop();
   }
 }
-
-
-
 class Obstacle {
   constructor() {
     this.x = width;
