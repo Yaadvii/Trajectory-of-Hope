@@ -34,12 +34,10 @@ function draw() {
   // Handle planets
   updatePlanet(saturn, 'saturn');
   updatePlanet(jupiter, 'jupiter');
-
   if (!planetVisible) spawnPlanet();
   // Handle meteors
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
-
   if (meteor) {
     meteor.update();
     meteor.show();
@@ -105,11 +103,7 @@ function showWinMessage() {
   fill(0, 255, 0);
   textSize(20);
   textAlign(CENTER);
-  text("Congratulations! You've discovered that hope isn't just", width / 2, height / 2 - 60);
-  text("about reaching the destination - it's about growing", width / 2, height / 2 - 40);
-  text("stronger with every challenge you face.", width / 2, height / 2 - 20);
-  text("You overcame all obstacles and your light", width / 2, height / 2 + 10);
-  text("now shines brightest in the cosmos!", width / 2, height / 2 + 30);
+  text("Congratulations! You've discovered that hope isn't just \n about reaching the destination - it's about growing \n stronger with every challenge you face, \n You overcame all obstacles and your light \n now shines brightest in the cosmos!", width / 2, height / 2);
   fill(255, 255, 200);
   textSize(16);
   text("Final Score: " + score, width / 2, height / 2 + 60);
@@ -126,13 +120,12 @@ function showWelcomeScreen() {
   
   fill(255);
   textSize(17);
-  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope";
+  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope");
   
   fill(200);
   textSize(16);
   text("Click anywhere to start your journey.", width / 2, 250);
 }
-
 function mousePressed() {
   if (gameState === 'welcome') {
     gameState = 'playing';
