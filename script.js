@@ -120,7 +120,7 @@ function showWelcomeScreen() {
   
   fill(255);
   textSize(17);
-  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope", width / 2, 120);
+  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope");
   
   fill(200);
   textSize(16);
