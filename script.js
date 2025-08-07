@@ -1,4 +1,4 @@
-let player, obstacles = [], score = 0, bgBrightness = 0, meteor = null;
+let player, obstacles = [], score = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null;
 let gameState = 'welcome';
 let saturnShown = false, jupiterShown = false;
@@ -22,7 +22,7 @@ function draw() {
     showWelcomeScreen();
     return;
   }
-  background(bgBrightness);//changes colour from black to a lighter shade
+  background(0); // Keep background black
   player.update();
   player.show();
   if (frameCount % 60 === 0) obstacles.push(new Obstacle()); //generating new obstacles every second
@@ -60,7 +60,6 @@ function draw() {
     if (obstacles[i].offscreen()) {
       obstacles.splice(i, 1);
       score++;
-      if (bgBrightness < 100) bgBrightness += 2;
       if (score >= 50) {
         noLoop();
         showWinMessage();
