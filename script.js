@@ -143,21 +143,11 @@ class Player {
   
   show() {
     if (!this.starSprite) {
-      let starPattern = 
-`....y...,
-...yyy...
-..yyyyy..
-.yyyyyyy.
-yyyyyyyyy
-.yyyyyyy.
-..yyyyy..
-...yyy...
-....y...,`;
-      this.starSprite = spriteArt(starPattern, 3);
-    }
-
     push();
-    translate(this.x, this.y);
+    translate(width * 0.2, height * 0.5);
+    rotate(frameCount / 200.0);
+    star(0, 0, 5, 70, 3);
+    pop();
     let scaleAmount = this.r / 20;
     scale(scaleAmount);
 
