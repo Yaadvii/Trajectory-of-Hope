@@ -157,10 +157,10 @@ class Player {
     push();
     translate(this.x, this.y);
     
-    drawingContext.shadowColor = 'white';
+    drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
     
-    fill(255, 255, 255);
+    fill(255, 255, 0);
     noStroke();
     textAlign(CENTER, CENTER);
     textSize(this.r * 3);
