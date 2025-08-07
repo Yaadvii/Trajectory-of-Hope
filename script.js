@@ -1,6 +1,6 @@
 let player, obstacles = [], score = 0, bgBrightness = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null, planetVisible = false;
-let gameState = 'welcome';
+let gameState = 'playing';
 
 function setup() {
   createCanvas(600, 400);
@@ -126,7 +126,7 @@ function showWelcomeScreen() {
   
   fill(255);
   textSize(17);
-  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope";
+  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope", width / 2, 120);
   
   fill(200);
   textSize(16);
