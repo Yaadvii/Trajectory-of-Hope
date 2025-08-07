@@ -165,32 +165,70 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.speed = 3;
-    this.w = 20;
-    this.h = random() < 0.3 ? height / 2 : random(60, 180);
+    this.w = 30; // Width of the asteroid belt
+    this.h = random() < 0.3 ? height / 2 : random(80, 200);
     this.y = random([0, height - this.h]);
+    
+    // Create multiple asteroids (circles) that form the belt
+    this.asteroids = [];
+    let numAsteroids = Math.floor(this.h / 25) + 2; // Number of asteroids based on height
+    
+    for (let i = 0; i < numAsteroids; i++) {
+      let asteroidY = this.y + (i * this.h / (numAsteroids - 1));
+      let size = random(15, 25);
+      
+      this.asteroids.push({
+        x: random(-5, 5), // Small random offset from center
+        y: asteroidY,
+        size: size,
+        offsetX: random(-3, 3), // Additional random positioning
+        color: random(80, 120) // Slight color variation
+      });
+    }
   }
 
   update() {
     this.x -= this.speed;
+    // Update each asteroid's position
+    for (let asteroid of this.asteroids) {
+      asteroid.x = this.x + asteroid.offsetX;
+    }
   }
 
   show() {
-    fill(100, 100, 120);
-    stroke(80, 80, 100);
-    strokeWeight(2);
-    rect(this.x, this.y, this.w, this.h);
-    
-    // Add some simple shading
-    fill(120, 120, 140);
-    noStroke();
-    rect(this.x + 2, this.y + 2, this.w - 4, this.h - 4);
+    // Draw each asteroid in the belt
+    for (let asteroid of this.asteroids) {
+      push();
+      
+      // Main asteroid body
+      fill(asteroid.color, asteroid.color - 10, asteroid.color + 20);
+      stroke(asteroid.color - 20, asteroid.color - 20, asteroid.color);
+      strokeWeight(1.5);
+      ellipse(asteroid.x, asteroid.y, asteroid.size);
+      
+      // Add some surface detail/craters
+      fill(asteroid.color - 15, asteroid.color - 15, asteroid.color + 10);
+      noStroke();
+      ellipse(asteroid.x - asteroid.size * 0.2, asteroid.y - asteroid.size * 0.1, asteroid.size * 0.3);
+      ellipse(asteroid.x + asteroid.size * 0.1, asteroid.y + asteroid.size * 0.2, asteroid.size * 0.2);
+      
+      // Highlight for 3D effect
+      fill(asteroid.color + 30, asteroid.color + 20, asteroid.color + 40, 150);
+      ellipse(asteroid.x - asteroid.size * 0.15, asteroid.y - asteroid.size * 0.15, asteroid.size * 0.4);
+      
+      pop();
+    }
   }
 
   hits(player) {
-    return player.x + player.r > this.x && 
-           player.x - player.r < this.x + this.w &&
-           player.y + player.r > this.y && 
-           player.y - player.r < this.y + this.h;
+    // Check collision with each asteroid in the belt
+    for (let asteroid of this.asteroids) {
+      let distance = dist(player.x, player.y, asteroid.x, asteroid.y);
+      if (distance < (player.r + asteroid.size/2)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   offscreen() {
