@@ -135,8 +135,8 @@ class Player {
   }
   update() {
     if (gameState === 'playing') {
-      if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
-      if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
+      if (keyIsDown(UP_ARROW) || keyIsDown(87)) this.y -= 5;
+      if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) this.y += 5;
       this.y = constrain(this.y, this.r, height - this.r);
     }
   }
@@ -167,7 +167,6 @@ class Player {
     drawingContext.shadowBlur = 0;
     pop();
   }
-}
 }
 
 class Obstacle {
