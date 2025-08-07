@@ -144,7 +144,6 @@ class Player {
       this.y = constrain(this.y, this.r, height - this.r);
     }
   }
-  
   show() {
     push();
     translate(this.x, this.y);
@@ -162,9 +161,6 @@ class Player {
     pop();
   }
 }
-
-
-
 class Obstacle {
   constructor() {
     this.x = width;
