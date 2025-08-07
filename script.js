@@ -180,14 +180,10 @@ class Obstacle {
     stroke(36, 36, 36); // Darker charcoal for outline
     strokeWeight(2);
     rect(this.x, this.y, this.w, this.h);
-    
-    // Add some simple shading
-    fill(72, 72, 72);  // Lighter charcoal for highlight
-    noStroke();
-    rect(this.x + 2, this.y + 2, this.w - 4, this.h - 4);
+
   }
 
-  hits(player) {
+    hits(player) {
     return player.x + player.r > this.x && 
            player.x - player.r < this.x + this.w &&
            player.y + player.r > this.y && 
@@ -198,7 +194,7 @@ class Obstacle {
     return this.x + this.w < 0;
   }
 }
-
+//meteor creation
 class Meteor {
   constructor() {
     this.x = random(50, width - 50);
@@ -264,7 +260,7 @@ class CelestialObject {
   update() {
     if (random() < 0.05) this.twinkle = random(80, 255);
   }
-
+//stars avatar
   show() {
     push();
     fill(255, 255, 200, this.twinkle);
@@ -291,7 +287,7 @@ class CelestialObject {
     pop();
   }
 }
-
+//saturn avatar
 class Planet {
   constructor(type, x, y) {
     this.type = type;
@@ -312,7 +308,7 @@ class Planet {
   update() {
     this.y -= this.speed;
   }
-
+//planets avatar
   show() {
     push();
     fill(this.color);
@@ -340,7 +336,7 @@ class Planet {
     }
     pop();
   }
-  
+
   offscreen() {
     return this.y + this.r < 0;
   }
