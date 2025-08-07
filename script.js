@@ -7,13 +7,14 @@ function setup() {
   player = new Player();
   obstacles.push(new Obstacle());
 
-  // Fixed position of stars in the background
-  let starPositions = [
-    [50, 60], [150, 30], [280, 80], [420, 45], [520, 90],
-    [80, 220], [200, 180], [350, 200], [480, 250], [550, 320],
-    [30, 350], [120, 300], [250, 340], [380, 360], [450, 180], [320, 280]]
-    ;
-  celestialObjects = starPositions.map(pos => new CelestialObject(pos[0], pos[1]));
+  // Generate random stars in the background
+  celestialObjects = [];
+  let numStars = 20; // You can adjust this number
+  for (let i = 0; i < numStars; i++) {
+    let x = random(10, width - 10);
+    let y = random(10, height - 10);
+    celestialObjects.push(new CelestialObject(x, y));
+  }
 
   // Spawn initial planet
   spawnPlanet();
@@ -313,7 +314,7 @@ class CelestialObject {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.r = random(1, 2.5);
+    this.r = random(0.8, 3.5); // Random size for each star
     this.twinkle = random(150, 255);
   }
 
