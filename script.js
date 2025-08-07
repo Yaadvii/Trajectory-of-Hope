@@ -1,4 +1,4 @@
-let player, obstacles = [], score = 0, bgBrightness = 0, meteors;
+let player, obstacles = [], score = 0, bgBrightness = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null;
 let gameState = 'welcome';
 let saturnShown = false, jupiterShown = false;
@@ -7,7 +7,6 @@ function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
-  meteors = new Group();
 
   // Generate random stars in the background
   celestialObjects = [];
@@ -43,19 +42,12 @@ function draw() {
   updatePlanet(jupiter, 'jupiter');
   // Meteors at fixed positions
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
-  if (meteorScores.includes(score)) {
-    meteors.add(new Meteor());
-  }
-  
-  // Handle meteors
-  for (let i = meteors.length - 1; i >= 0; i--) {
-    let meteor = meteors[i];
+  if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
+  if (meteor) {
     meteor.update();
     meteor.show();
     if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope!");
-    if (meteor.offscreen()) {
-      meteors.remove(meteor);
-    }
+    if (meteor.offscreen()) meteor = null;
   }
   // Handle obstacles - backwards loop for removal
   for (let i = obstacles.length - 1; i >= 0; i--) {
