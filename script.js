@@ -49,7 +49,7 @@ function draw() {
     if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope!");
     if (meteor.offscreen()) meteor = null;
   }
-  // Handle obstacles - must use backwards loop for safe removal
+  // Handle obstacles - backwards loop for removal
   for (let i = obstacles.length - 1; i >= 0; i--) {
     obstacles[i].update();
     obstacles[i].show();
@@ -76,7 +76,7 @@ function draw() {
 
 function updatePlanet(planet, type) {
   if (planet) {
-    planet.update();
+    planet.update();//moves the planet up and out
     planet.show();
     if (planet.offscreen()) {
       if (type === 'saturn') saturn = null;
@@ -147,7 +147,8 @@ class Player {
   }
   show() {
     if (!this.starSprite) {
-      let starPattern = `....y...,
+      let starPattern = 
+`....y...,
 ...yyy...
 ..yyyyy..
 .yyyyyyy.
