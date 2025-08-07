@@ -1,4 +1,3 @@
-
 let player, obstacles = [], score = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null;
 let gameState = 'welcome';
@@ -8,7 +7,6 @@ function setup() {
   createCanvas(600, 400);
   player = new Player();
   obstacles.push(new Obstacle());
-
   // Generate random stars in the background
   celestialObjects = [];
   let numStars = 15;
@@ -18,7 +16,6 @@ function setup() {
     celestialObjects.push(new CelestialObject(x, y));
   }
 }
-
 function draw() {
   if (gameState == 'welcome') {
     showWelcomeScreen();
@@ -74,14 +71,12 @@ function draw() {
       gameOver("You faced an obstacle. Don't lose hope.");
     }
   }
-  
-  // Win condition check at the end to ensure text appears on top
+ // Win condition check at the end to ensure text appears on top
   if (score >= 50) {
     noLoop();
     showWinMessage();
   }
 }
-
 function updatePlanet(planet, type) {
   if (planet) {
     planet.update();//moves the planet up and out
@@ -143,8 +138,7 @@ class Player {
     this.x = 100;
     this.y = height / 2;
     this.r = 10;
-  }
-  
+  } 
   update() {
     if (gameState === 'playing') {
       if (keyIsPressed && keyCode === UP_ARROW) this.y -= 5;
@@ -155,8 +149,7 @@ class Player {
   
   show() {
     push();
-    translate(this.x, this.y);
-    
+    translate(this.x, this.y); 
     drawingContext.shadowColor = 'lightblue';
     drawingContext.shadowBlur = 15;
     
@@ -188,9 +181,7 @@ class Obstacle {
     stroke(36, 36, 36); // Darker charcoal for outline
     strokeWeight(2);
     rect(this.x, this.y, this.w, this.h);
-
   }
-
     hits(player) {
     return player.x + player.r > this.x && 
            player.x - player.r < this.x + this.w &&
@@ -256,7 +247,6 @@ class Meteor {
     return this.y - this.r > height;
   }
 }
-
 class CelestialObject {
   constructor(x, y) {
     this.x = x;
@@ -264,7 +254,6 @@ class CelestialObject {
     this.r = random(0.8, 3.5); // Random size for each star
     this.twinkle = random(150, 255);
   }
-
   update() {
     if (random() < 0.05) this.twinkle = random(80, 255);
   }
@@ -342,7 +331,6 @@ class Planet {
     }
     pop();
   }
-
   offscreen() {
     return this.y + this.r < 0;
   }
