@@ -48,7 +48,6 @@ function draw() {
   if (meteor) {
     meteor.update();
     meteor.show();
-    if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope!");
     if (meteor.offscreen()) meteor = null;
   }
   // Handle obstacles - backwards loop for removal
@@ -56,9 +55,6 @@ function draw() {
     obstacles[i].update();
     obstacles[i].show();
 
-    if (obstacles[i].hits(player)) {
-      gameOver("You faced an obstacle. Don't lose hope.");
-    }
     if (obstacles[i].offscreen()) {
       obstacles.splice(i, 1);
       score++;
@@ -72,6 +68,16 @@ function draw() {
   fill(255);
   textSize(16);
   text("Obstacles overcome: " + score, 85, 20);
+  
+  // Collision detection at the end to ensure text appears on top
+  if (meteor && meteor.hits(player)) {
+    gameOver("You faced a minor setback. Don't lose hope!");
+  }
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    if (obstacles[i].hits(player)) {
+      gameOver("You faced an obstacle. Don't lose hope.");
+    }
+  }
 }
 
 function updatePlanet(planet, type) {
