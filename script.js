@@ -58,10 +58,6 @@ function draw() {
     if (obstacles[i].offscreen()) {
       obstacles.splice(i, 1);
       score++;
-      if (score >= 50) {
-        noLoop();
-        showWinMessage();
-      }
     }
   }
   // Score display
@@ -77,6 +73,12 @@ function draw() {
     if (obstacles[i].hits(player)) {
       gameOver("You faced an obstacle. Don't lose hope.");
     }
+  }
+  
+  // Win condition check at the end to ensure text appears on top
+  if (score >= 50) {
+    noLoop();
+    showWinMessage();
   }
 }
 
