@@ -176,13 +176,13 @@ class Obstacle {
   }
 
   show() {
-    fill(100, 100, 120);
-    stroke(80, 80, 100);
+    fill(54, 54, 54);  // Charcoal grey
+    stroke(36, 36, 36); // Darker charcoal for outline
     strokeWeight(2);
     rect(this.x, this.y, this.w, this.h);
     
     // Add some simple shading
-    fill(120, 120, 140);
+    fill(72, 72, 72);  // Lighter charcoal for highlight
     noStroke();
     rect(this.x + 2, this.y + 2, this.w - 4, this.h - 4);
   }
