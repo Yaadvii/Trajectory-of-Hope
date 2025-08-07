@@ -50,9 +50,9 @@ function draw() {
     if (meteor.offscreen()) meteor = null;
   }
   // Handle obstacles
-  for (let i = obstacles.length - 1; i >= 0; i--) {
-    obstacles[i].update();
-    obstacles[i].show();
+  obstacles.forEach(obstacle => {
+    obstacle.update();
+    obstacle.show();
 
     if (obstacles[i].hits(player)) {
       gameOver("You faced an obstacle. Don't lose hope.");
