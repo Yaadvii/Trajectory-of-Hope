@@ -126,13 +126,7 @@ function showWelcomeScreen() {
   
   fill(255);
   textSize(17);
-  text("Welcome to Light in the Dark — a game about hope and resilience.", width / 2, 90);
-  text("Use the up (↑) and down (↓) arrow keys to guide your star through", width / 2, 110);
-  text("a galaxy filled with challenges. Dodge towering asteroid belts and", width / 2, 125);
-  text("evade flying meteors as you move forward. With every obstacle you", width / 2, 140);
-  text("overcome, your star grows brighter. Make it past 50 challenges to", width / 2, 155);
-  text("win and become the brightest star in the cosmos.", width / 2, 170);
-  text("Remember: every setback is just a setup for your shine.", width / 2, 190);
+  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope";
   
   fill(200);
   textSize(16);
