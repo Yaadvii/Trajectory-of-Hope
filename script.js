@@ -148,37 +148,22 @@ class Player {
   show() {
     push();
     translate(this.x, this.y);
-    rotate(frameCount / -100.0);
     
     drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
     
     fill(255, 255, 0);
-    stroke(255, 255, 150);
-    strokeWeight(1);
-    
-    // Use your custom rotating star
-    star(0, 0, 30, 70, 5);
+    noStroke();
+    textAlign(CENTER, CENTER);
+    textSize(this.r * 3);
+    text("★", 0, 0);
 
     drawingContext.shadowBlur = 0;
     pop();
   }
 }
 
-function star(x, y, radius1, radius2, npoints) {
-  let angle = TWO_PI / npoints;
-  let halfAngle = angle / 2.0;
-  beginShape();
-  for (let a = 0; a < TWO_PI; a += angle) {
-    let sx = x + cos(a) * radius2;
-    let sy = y + sin(a) * radius2;
-    vertex(sx, sy);
-    sx = x + cos(a + halfAngle) * radius1;
-    sy = y + sin(a + halfAngle) * radius1;
-    vertex(sx, sy);
-  }
-  endShape(CLOSE);
-}
+
 
 class Obstacle {
   constructor() {
