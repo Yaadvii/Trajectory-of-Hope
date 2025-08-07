@@ -135,18 +135,16 @@ class Player {
   }
   update() {
     if (gameState === 'playing') {
-      if (keyIsDown(UP_ARROW) || keyIsDown(87)) this.y -= 5;
-      if (keyIsDown(DOWN_ARROW) || keyIsDown(83)) this.y += 5;
+      if (kb.pressing('ArrowUp') || kb.pressing('w')) this.y -= 5;
+      if (kb.pressing('ArrowDown') || kb.pressing('s')) this.y += 5;
       this.y = constrain(this.y, this.r, height - this.r);
     }
   }
   
   show() {
     push();
-    translate(width * 0.8, height * 0.5);
-    rotate(frameCount / -100.0);
-    star(0, 0, 30, 70, 5);
-    pop();
+    translate(this.x, this.y);
+    rotate(frameCount / 200.0);
     
     drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
@@ -156,19 +154,22 @@ class Player {
     strokeWeight(1);
     
     // Draw a star shape
-    function star(x, y, radius1, radius2, npoints) {
-      let angle = TWO_PI / npoints;
-      let halfAngle = angle / 2.0;
-      beginShape();
-      for (let a = 0; a < TWO_PI; a += angle) {
-        let sx = x + cos(a) * radius2;
-        let sy = y + sin(a) * radius2;
-        vertex(sx, sy);
-        sx = x + cos(a + halfAngle) * radius1;
-        sy = y + sin(a + halfAngle) * radius1;
-        vertex(sx, sy);
-      }
-      endShape(CLOSE);
+    let angle = TWO_PI / 5;
+    let halfAngle = angle / 2.0;
+    beginShape();
+    for (let a = 0; a < TWO_PI; a += angle) {
+      let sx = cos(a) * this.r * 2;
+      let sy = sin(a) * this.r * 2;
+      vertex(sx, sy);
+      sx = cos(a + halfAngle) * this.r;
+      sy = sin(a + halfAngle) * this.r;
+      vertex(sx, sy);
+    }
+    endShape(CLOSE);
+
+    drawingContext.shadowBlur = 0;
+    pop();
+  }
 }
 
 class Obstacle {
