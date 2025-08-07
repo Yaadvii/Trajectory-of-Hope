@@ -66,7 +66,7 @@ function draw() {
   // Score display
   fill(255);
   textSize(16);
-  text("Obstacles overcome: " + score, 10, 20);
+  text("Obstacles overcome: " + score, 85, 20);
 }
 function spawnPlanet() {
   if (random() < 0.5) {
@@ -120,11 +120,11 @@ function showWelcomeScreen() {
   
   fill(255);
   textSize(17);
-  text("Welcome.\n Use Up and Down arrow keys to make your star avoid the asteroid belts and stay safe from the meteors.\n Remember, no matter what happens, don't lose hope");
+  text("Welcome.\n Use Up and Down arrow keys to \n avoid your star from running into the asteroid belts and the meteors.\n Remember, no matter what happens, don't lose hope", width / 2, height / 2-50);
   
   fill(200);
   textSize(16);
-  text("Click anywhere to start your journey.", width / 2, 250);
+  text("Click anywhere to start your journey.", width / 2, height/2 +100);
 }
 function mousePressed() {
   if (gameState === 'welcome') {
