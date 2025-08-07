@@ -1,3 +1,4 @@
+
 let player, obstacles = [], score = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null;
 let gameState = 'welcome';
@@ -17,6 +18,7 @@ function setup() {
     celestialObjects.push(new CelestialObject(x, y));
   }
 }
+
 function draw() {
   if (gameState == 'welcome') {
     showWelcomeScreen();
@@ -121,6 +123,7 @@ function showWelcomeScreen() {
   textSize(16);
   text("Click anywhere to start your journey.", width / 2, height/2 +100);
 }
+
 function mousePressed() {
   if (gameState === 'welcome') {
     gameState = 'playing';
@@ -154,8 +157,8 @@ class Player {
     stroke(255, 255, 150);
     strokeWeight(1);
     
-    // Use the custom star function
-    star(0, 0, this.r, this.r * 2, 5);
+    // Use your custom rotating star
+    star(0, 0, 30, 70, 5);
 
     drawingContext.shadowBlur = 0;
     pop();
@@ -355,6 +358,7 @@ class Planet {
     }
     pop();
   }
+  
   offscreen() {
     return this.y + this.r < 0;
   }
