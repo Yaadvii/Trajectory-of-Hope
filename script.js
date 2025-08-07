@@ -166,32 +166,90 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.speed = 3;
-    this.w = 20;
-    this.h = random() < 0.3 ? height / 2 : random(60, 180);
+    this.w = 40;
+    this.h = random() < 0.3 ? height / 2 : random(100, 220);
     this.y = random([0, height - this.h]);
+    
+    // Create asteroid belt
+    this.asteroids = [];
+    let numLayers = Math.floor(this.h / 18) + 3;
+    
+    let asteroidColors = [
+      { r: 80, g: 75, b: 70 },   // Dark gray
+      { r: 95, g: 85, b: 75 },   // Brown-gray
+      { r: 70, g: 65, b: 60 },   // Charcoal
+      { r: 100, g: 90, b: 80 },  // Light brown
+      { r: 65, g: 60, b: 55 }    // Dark brown
+    ];
+    
+    for (let i = 0; i < numLayers; i++) {
+      let layerY = this.y + (i * this.h / (numLayers - 1));
+      let asteroidsInLayer = random(2, 4);
+      
+      for (let j = 0; j < asteroidsInLayer; j++) {
+        let size = random(12, 28);
+        let colorType = random(asteroidColors);
+        let variation = random(-15, 15);
+        
+        this.asteroids.push({
+          x: random(-8, 8),
+          y: layerY + random(-8, 8),
+          size: size,
+          offsetX: random(-6, 6),
+          color: {
+            r: constrain(colorType.r + variation, 50, 130),
+            g: constrain(colorType.g + variation, 45, 125),
+            b: constrain(colorType.b + variation, 40, 120)
+          },
+          rotation: random(0, TWO_PI),
+          rotationSpeed: random(-0.02, 0.02)
+        });
+      }
+    }
   }
 
   update() {
     this.x -= this.speed;
+    for (let asteroid of this.asteroids) {
+      asteroid.x = this.x + asteroid.offsetX;
+      asteroid.rotation += asteroid.rotationSpeed;
+    }
   }
 
   show() {
-    fill(100, 100, 120);
-    stroke(80, 80, 100);
-    strokeWeight(2);
-    rect(this.x, this.y, this.w, this.h);
-    
-    // Add some simple shading
-    fill(120, 120, 140);
-    noStroke();
-    rect(this.x + 2, this.y + 2, this.w - 4, this.h - 4);
+    for (let asteroid of this.asteroids) {
+      push();
+      translate(asteroid.x, asteroid.y);
+      rotate(asteroid.rotation);
+      
+      // Main asteroid body
+      fill(asteroid.color.r, asteroid.color.g, asteroid.color.b);
+      stroke(asteroid.color.r - 25, asteroid.color.g - 25, asteroid.color.b - 25);
+      strokeWeight(1.5);
+      ellipse(0, 0, asteroid.size);
+      
+      // Surface craters
+      fill(asteroid.color.r - 20, asteroid.color.g - 20, asteroid.color.b - 20);
+      noStroke();
+      ellipse(-asteroid.size * 0.25, -asteroid.size * 0.15, asteroid.size * 0.35);
+      ellipse(asteroid.size * 0.15, asteroid.size * 0.2, asteroid.size * 0.25);
+      
+      // Highlight for 3D effect
+      fill(asteroid.color.r + 40, asteroid.color.g + 35, asteroid.color.b + 30, 180);
+      ellipse(-asteroid.size * 0.2, -asteroid.size * 0.2, asteroid.size * 0.3);
+      
+      pop();
+    }
   }
 
   hits(player) {
-    return player.x + player.r > this.x && 
-           player.x - player.r < this.x + this.w &&
-           player.y + player.r > this.y && 
-           player.y - player.r < this.y + this.h;
+    for (let asteroid of this.asteroids) {
+      let d = dist(player.x, player.y, asteroid.x, asteroid.y);
+      if (d < (player.r + asteroid.size / 2)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   offscreen() {
