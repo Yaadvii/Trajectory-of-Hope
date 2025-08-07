@@ -15,7 +15,6 @@ function setup() {
     let y = random(10, height - 10);
     celestialObjects.push(new CelestialObject(x, y));
   }
-
   // Spawn initial planet
   spawnPlanet();
 }
