@@ -1,6 +1,7 @@
 let player, obstacles = [], score = 0, bgBrightness = 0, meteor = null;
-let celestialObjects = [], saturn = null, jupiter = null, planetVisible = false;
+let celestialObjects = [], saturn = null, jupiter = null;
 let gameState = 'welcome';
+let saturnShown = false, jupiterShown = false;
 
 function setup() {
   createCanvas(600, 400);
@@ -15,8 +16,6 @@ function setup() {
     let y = random(10, height - 10);
     celestialObjects.push(new CelestialObject(x, y));
   }
-  // Spawn initial planet
-  spawnPlanet();
 }
 function draw() {
   if (gameState === 'welcome') {
@@ -31,10 +30,18 @@ function draw() {
   // Update celestial objects
   celestialObjects.forEach(star => { star.update(); star.show(); });
 
-  // Handle planets
+  // Handle planets - spawn once at specific scores
+  if (score === 10 && !saturnShown) {
+    saturn = new Planet('saturn', random(50, width - 50), height + 50);
+    saturnShown = true;
+  }
+  if (score === 25 && !jupiterShown) {
+    jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
+    jupiterShown = true;
+  }
+  
   updatePlanet(saturn, 'saturn');
   updatePlanet(jupiter, 'jupiter');
-  if (!planetVisible) spawnPlanet();
   // Handle meteors
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
@@ -68,14 +75,7 @@ function draw() {
   textSize(16);
   text("Obstacles overcome: " + score, 85, 20);
 }
-function spawnPlanet() {
-  if (random() < 0.5) {
-    saturn = new Planet('saturn', random(50, width - 50), height + 50);
-  } else {
-    jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
-  }
-  planetVisible = true;
-}
+
 function updatePlanet(planet, type) {
   if (planet) {
     planet.update();
@@ -83,7 +83,6 @@ function updatePlanet(planet, type) {
     if (planet.offscreen()) {
       if (type === 'saturn') saturn = null;
       else jupiter = null;
-      planetVisible = false;
     }
   }
 }
