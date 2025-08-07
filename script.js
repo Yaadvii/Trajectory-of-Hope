@@ -27,9 +27,8 @@ function draw() {
   player.show();
   if (frameCount % 60 === 0) obstacles.push(new Obstacle()); //generating new obstacles every second
 
-  // Update celestial objects
+  // twinking of the stars 
   celestialObjects.forEach(star => { star.update(); star.show(); });
-
   // Planets go in once at specific scores
   if (score === 10 && !saturnShown) {
     saturn = new Planet('saturn', random(50, width - 50), height + 50);
@@ -39,10 +38,9 @@ function draw() {
     jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
     jupiterShown = true;
   }
-  
   updatePlanet(saturn, 'saturn');
   updatePlanet(jupiter, 'jupiter');
-  // Handle meteors
+  // Meteors at fixed positions
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
   if (meteor) {
