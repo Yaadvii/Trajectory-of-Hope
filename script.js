@@ -165,56 +165,92 @@ class Obstacle {
   constructor() {
     this.x = width;
     this.speed = 3;
-    this.w = 30; // Width of the asteroid belt
-    this.h = random() < 0.3 ? height / 2 : random(80, 200);
+    this.w = 40; // Width of the asteroid belt
+    this.h = random() < 0.3 ? height / 2 : random(100, 220);
     this.y = random([0, height - this.h]);
     
-    // Create multiple asteroids (circles) that form the belt
+    // Create multiple layers of asteroids that form dense belts
     this.asteroids = [];
-    let numAsteroids = Math.floor(this.h / 25) + 2; // Number of asteroids based on height
+    let numLayers = Math.floor(this.h / 18) + 3; // More layers for denser belts
     
-    for (let i = 0; i < numAsteroids; i++) {
-      let asteroidY = this.y + (i * this.h / (numAsteroids - 1));
-      let size = random(15, 25);
+    // Realistic asteroid color palettes
+    let asteroidTypes = [
+      { r: 80, g: 75, b: 70 },   // Dark gray
+      { r: 95, g: 85, b: 75 },   // Brown-gray
+      { r: 70, g: 65, b: 60 },   // Charcoal
+      { r: 100, g: 90, b: 80 },  // Light brown
+      { r: 65, g: 60, b: 55 },   // Dark brown
+      { r: 85, g: 80, b: 75 },   // Medium gray
+      { r: 110, g: 100, b: 85 }  // Sandy brown
+    ];
+    
+    for (let i = 0; i < numLayers; i++) {
+      let layerY = this.y + (i * this.h / (numLayers - 1));
+      let asteroidsInLayer = random(2, 4); // 2-3 asteroids per layer
       
-      this.asteroids.push({
-        x: random(-5, 5), // Small random offset from center
-        y: asteroidY,
-        size: size,
-        offsetX: random(-3, 3), // Additional random positioning
-        color: random(80, 120) // Slight color variation
-      });
+      for (let j = 0; j < asteroidsInLayer; j++) {
+        let size = random(12, 28);
+        let colorType = random(asteroidTypes);
+        let variation = random(-15, 15); // Color variation
+        
+        this.asteroids.push({
+          x: random(-8, 8), // Wider spread
+          y: layerY + random(-8, 8), // Slight vertical variation
+          size: size,
+          offsetX: random(-6, 6),
+          color: {
+            r: constrain(colorType.r + variation, 50, 130),
+            g: constrain(colorType.g + variation, 45, 125),
+            b: constrain(colorType.b + variation, 40, 120)
+          },
+          rotation: random(0, TWO_PI),
+          rotationSpeed: random(-0.02, 0.02)
+        });
+      }
     }
   }
 
   update() {
     this.x -= this.speed;
-    // Update each asteroid's position
+    // Update each asteroid's position and rotation
     for (let asteroid of this.asteroids) {
       asteroid.x = this.x + asteroid.offsetX;
+      asteroid.rotation += asteroid.rotationSpeed;
     }
   }
 
   show() {
-    // Draw each asteroid in the belt
+    // Draw each asteroid in the belt with realistic colors
     for (let asteroid of this.asteroids) {
       push();
+      translate(asteroid.x, asteroid.y);
+      rotate(asteroid.rotation);
       
-      // Main asteroid body
-      fill(asteroid.color, asteroid.color - 10, asteroid.color + 20);
-      stroke(asteroid.color - 20, asteroid.color - 20, asteroid.color);
+      // Main asteroid body with realistic colors
+      fill(asteroid.color.r, asteroid.color.g, asteroid.color.b);
+      stroke(asteroid.color.r - 25, asteroid.color.g - 25, asteroid.color.b - 25);
       strokeWeight(1.5);
-      ellipse(asteroid.x, asteroid.y, asteroid.size);
+      ellipse(0, 0, asteroid.size);
       
-      // Add some surface detail/craters
-      fill(asteroid.color - 15, asteroid.color - 15, asteroid.color + 10);
+      // Surface craters and details
+      fill(asteroid.color.r - 20, asteroid.color.g - 20, asteroid.color.b - 20);
       noStroke();
-      ellipse(asteroid.x - asteroid.size * 0.2, asteroid.y - asteroid.size * 0.1, asteroid.size * 0.3);
-      ellipse(asteroid.x + asteroid.size * 0.1, asteroid.y + asteroid.size * 0.2, asteroid.size * 0.2);
+      ellipse(-asteroid.size * 0.25, -asteroid.size * 0.15, asteroid.size * 0.35);
+      ellipse(asteroid.size * 0.15, asteroid.size * 0.2, asteroid.size * 0.25);
+      ellipse(-asteroid.size * 0.1, asteroid.size * 0.3, asteroid.size * 0.2);
       
-      // Highlight for 3D effect
-      fill(asteroid.color + 30, asteroid.color + 20, asteroid.color + 40, 150);
-      ellipse(asteroid.x - asteroid.size * 0.15, asteroid.y - asteroid.size * 0.15, asteroid.size * 0.4);
+      // Additional small craters
+      fill(asteroid.color.r - 30, asteroid.color.g - 30, asteroid.color.b - 30);
+      ellipse(asteroid.size * 0.2, -asteroid.size * 0.25, asteroid.size * 0.15);
+      ellipse(-asteroid.size * 0.3, asteroid.size * 0.1, asteroid.size * 0.12);
+      
+      // Bright highlight for 3D effect
+      fill(asteroid.color.r + 40, asteroid.color.g + 35, asteroid.color.b + 30, 180);
+      ellipse(-asteroid.size * 0.2, -asteroid.size * 0.2, asteroid.size * 0.3);
+      
+      // Subtle glow effect
+      fill(asteroid.color.r + 20, asteroid.color.g + 15, asteroid.color.b + 10, 60);
+      ellipse(0, 0, asteroid.size * 1.3);
       
       pop();
     }
