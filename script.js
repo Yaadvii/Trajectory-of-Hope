@@ -49,10 +49,10 @@ function draw() {
     if (meteor.hits(player)) gameOver("You faced a minor setback. Don't lose hope!");
     if (meteor.offscreen()) meteor = null;
   }
-  // Moves the obstacles off the screen
-  obstacles.forEach(obstacle => {
-    obstacle.update();
-    obstacle.show();
+  // Handle obstacles - must use backwards loop for safe removal
+  for (let i = obstacles.length - 1; i >= 0; i--) {
+    obstacles[i].update();
+    obstacles[i].show();
 
     if (obstacles[i].hits(player)) {
       gameOver("You faced an obstacle. Don't lose hope.");
