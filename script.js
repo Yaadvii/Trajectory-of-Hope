@@ -2,6 +2,7 @@
 let player, obstacles = [], score = 0, meteor = null;
 let celestialObjects = [], saturn = null, jupiter = null;
 let gameState = 'welcome';
+let saturnShown = false, jupiterShown = false;
 
 function setup() {
   createCanvas(600, 400);
@@ -31,18 +32,16 @@ function draw() {
   // twinking of the stars 
   celestialObjects.forEach(star => { star.update(); star.show(); });
   // Planets go in once at specific scores
-  if (score === 10 && !saturn) {
+  if (score === 10 && !saturnShown) {
     saturn = new Planet('saturn', random(50, width - 50), height + 50);
+    saturnShown = true;
   }
-  if (score === 25 && !jupiter) {
+  if (score === 25 && !jupiterShown) {
     jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
+    jupiterShown = true;
   }
-  updatePlanet(saturn);
-  updatePlanet(jupiter);
-  
-  // Clean up offscreen planets
-  if (saturn && saturn.offscreen()) saturn = null;
-  if (jupiter && jupiter.offscreen()) jupiter = null;
+  updatePlanet(saturn, 'saturn');
+  updatePlanet(jupiter, 'jupiter');
   // Meteors at fixed positions
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
@@ -83,10 +82,14 @@ function draw() {
   }
 }
 
-function updatePlanet(planet) {
+function updatePlanet(planet, type) {
   if (planet) {
     planet.update();//moves the planet up and out
     planet.show();
+    if (planet.offscreen()) {
+      if (type === 'saturn') saturn = null;
+      else jupiter = null;
+    }
   }
 }
 
