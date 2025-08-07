@@ -10,7 +10,7 @@ function setup() {
 
   // Generate random stars in the background
   celestialObjects = [];
-  let numStars = 20; // You can adjust this number
+  let numStars = 15;
   for (let i = 0; i < numStars; i++) {
     let x = random(10, width - 10);
     let y = random(10, height - 10);
@@ -18,19 +18,19 @@ function setup() {
   }
 }
 function draw() {
-  if (gameState === 'welcome') {
+  if (gameState == 'welcome') {
     showWelcomeScreen();
     return;
   }
-  background(bgBrightness);
+  background(bgBrightness);//changes colour from black to a lighter shade
   player.update();
   player.show();
-  if (frameCount % 60 === 0) obstacles.push(new Obstacle());
+  if (frameCount % 60 === 0) obstacles.push(new Obstacle()); //generating new obstacles every second
 
   // Update celestial objects
   celestialObjects.forEach(star => { star.update(); star.show(); });
 
-  // Handle planets - spawn once at specific scores
+  // Planets go in once at specific scores
   if (score === 10 && !saturnShown) {
     saturn = new Planet('saturn', random(50, width - 50), height + 50);
     saturnShown = true;
