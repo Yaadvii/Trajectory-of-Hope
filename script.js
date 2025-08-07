@@ -142,24 +142,32 @@ class Player {
   }
   
   show() {
-    if (!this.starSprite) {
     push();
-    translate(width * 0.2, height * 0.5);
+    translate(this.x, this.y);
     rotate(frameCount / 200.0);
-    star(0, 0, 5, 70, 3);
-    pop();
-    let scaleAmount = this.r / 20;
-    scale(scaleAmount);
-
+    
     drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
-
-    imageMode(CENTER);
-    image(this.starSprite, 0, 0);
+    
+    fill(255, 255, 0);
+    stroke(255, 255, 150);
+    strokeWeight(1);
+    
+    // Draw a star shape
+    beginShape();
+    for (let i = 0; i < 10; i++) {
+      let angle = map(i, 0, 10, 0, TWO_PI);
+      let r = i % 2 === 0 ? this.r : this.r / 2;
+      let x = cos(angle) * r;
+      let y = sin(angle) * r;
+      vertex(x, y);
+    }
+    endShape(CLOSE);
 
     drawingContext.shadowBlur = 0;
     pop();
   }
+}
 }
 
 class Obstacle {
