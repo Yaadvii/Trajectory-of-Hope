@@ -30,15 +30,16 @@ function draw() {
   // Update celestial objects
   celestialObjects.forEach(star => { star.update(); star.show(); });
 
-  // Handle planets - spawn randomly near any obstacle, once per game
-  if (score > 0 && !saturnShown && random() < 0.03) {
+  // Planets go in once at specific scores
+  if (score === 10 && !saturnShown) {
     saturn = new Planet('saturn', random(50, width - 50), height + 50);
     saturnShown = true;
   }
-  if (score > 5 && !jupiterShown && random() < 0.02) {
+  if (score === 25 && !jupiterShown) {
     jupiter = new Planet('jupiter', random(50, width - 50), height + 50);
     jupiterShown = true;
   }
+  
   updatePlanet(saturn, 'saturn');
   updatePlanet(jupiter, 'jupiter');
   // Handle meteors
@@ -110,16 +111,16 @@ function showWinMessage() {
 function showWelcomeScreen() {
   background(0);
   celestialObjects.forEach(star => { star.update(); star.show(); });
-
+  
   fill(255, 255, 150);
   textAlign(CENTER);
   textSize(28);
   text("Light in the Dark", width / 2, 50);
-
+  
   fill(255);
   textSize(17);
   text("Welcome.\n Use Up and Down arrow keys to \n avoid your star from running into the asteroid belts and the meteors.\n Remember, no matter what happens, don't lose hope", width / 2, height / 2-50);
-
+  
   fill(200);
   textSize(16);
   text("Click anywhere to start your journey.", width / 2, height/2 +100);
