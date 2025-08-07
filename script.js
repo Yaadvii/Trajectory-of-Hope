@@ -139,8 +139,8 @@ class Player {
   
   update() {
     if (gameState === 'playing') {
-      if (keyIsPressed && (key === 'w' || key === 'W' || keyCode === UP_ARROW)) this.y -= 5;
-      if (keyIsPressed && (key === 's' || key === 'S' || keyCode === DOWN_ARROW)) this.y += 5;
+      if (keyIsPressed && keyCode === UP_ARROW) this.y -= 5;
+      if (keyIsPressed && keyCode === DOWN_ARROW) this.y += 5;
       this.y = constrain(this.y, this.r, height - this.r);
     }
   }
