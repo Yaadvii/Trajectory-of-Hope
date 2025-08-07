@@ -302,7 +302,6 @@ class Planet {
     this.x = x;
     this.y = y;
     this.speed = random(0.5, 1.2);
-
     if (type === 'saturn') {
       this.r = random(15, 20);
       this.color = color(255, 215, 140);
@@ -312,7 +311,6 @@ class Planet {
       this.stripeOffset = random(0, TWO_PI);
     }
   }
-
   update() {
     this.y -= this.speed;
   }
