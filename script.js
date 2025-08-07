@@ -284,26 +284,20 @@ class CelestialObject {
     pop();
   }
 }
-//saturn avatar
 class Planet {
   constructor(type, x, y) {
     this.type = type;
     this.x = x;
     this.y = y;
     this.speed = random(0.5, 1.2);
-    if (type === 'saturn') {
-      this.r = random(15, 20);
-      this.color = color(255, 215, 140);
-    } else {
-      this.r = random(18, 25);
-      this.color = color(200, 150, 100);
-      this.stripeOffset = random(0, TWO_PI);
-    }
+    this.r = type === 'saturn' ? random(15, 20) : random(18, 25);
+    this.color = type === 'saturn' ? color(255, 215, 140) : color(200, 150, 100);
   }
+  
   update() {
     this.y -= this.speed;
   }
-//planets avatar
+  
   show() {
     push();
     fill(this.color);
@@ -311,23 +305,18 @@ class Planet {
     strokeWeight(1);
     ellipse(this.x, this.y, this.r * 2);
 
+    noFill();
     if (this.type === 'saturn') {
-      noFill();
       stroke(200, 200, 200, 150);
       strokeWeight(2);
       ellipse(this.x, this.y, this.r * 2.8);
       strokeWeight(1);
       ellipse(this.x, this.y, this.r * 3.2);
     } else {
-      noFill();
       stroke(150, 100, 60, 120);
       strokeWeight(1.5);
-      for (let i = -2; i <= 2; i++) {
-        arc(this.x, this.y + i * this.r * 0.4, this.r * 1.8, this.r * 0.3, 0, PI);
-      }
-      fill(180, 80, 60, 150);
-      noStroke();
-      ellipse(this.x + this.r * 0.3, this.y + this.r * 0.2, this.r * 0.4, this.r * 0.25);
+      ellipse(this.x, this.y, this.r * 2.5);
+      ellipse(this.x, this.y, this.r * 3);
     }
     pop();
   }
