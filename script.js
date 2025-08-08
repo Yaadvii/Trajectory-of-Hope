@@ -65,7 +65,7 @@ function draw() {
   }
   for (let i = obstacles.length - 1; i >= 0; i--) {
     if (obstacles[i].hits(player)) {
-      gameOver("You collided an asteroid. But hope doesn't shatter that easily.");
+      gameOver("You collided with an asteroid. But hope doesn't shatter that easily.");
     }
   }
 
