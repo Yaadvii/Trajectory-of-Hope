@@ -152,7 +152,7 @@ class Player {
   show() {
     push();
     translate(this.x, this.y); 
-    drawingContext.shadowColor = 'lightblue';
+    drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
 
     fill(255, 0, 0);
