@@ -155,7 +155,7 @@ class Player {
     drawingContext.shadowColor = 'yellow';
     drawingContext.shadowBlur = 15;
 
-    fill(255, 0, 0);
+    fill(255, 192, 203, 150);
     noStroke();
     textAlign(CENTER, CENTER);
     textSize(this.r * 3);
