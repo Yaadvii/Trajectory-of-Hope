@@ -76,7 +76,7 @@ function draw() {
     return;
   }
 
-  // Draw all text elements last to ensure they appear on top
+  // Draw score text last to ensure it appears on top
   fill(255);
   textSize(16);
   textAlign(LEFT);
@@ -95,12 +95,13 @@ function updatePlanet(planet, type) {
 
 function gameOver(message) {
   noLoop();
+  // Draw game over text last to appear on top of all elements
   fill(255, 0, 0);
-  textSize(19);
+  textSize(12);
   textAlign(CENTER);
   text(message, width / 2, height / 2 - 20);
   fill(0, 255, 0);
-  textSize(18);
+  textSize(11);
   text("Refresh to try again", width / 2, height / 2 + 20);
 }
 
