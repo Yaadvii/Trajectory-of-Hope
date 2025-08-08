@@ -64,11 +64,11 @@ function draw() {
   text("Obstacles overcome: " + score, 85, 20);
   
   if (meteor && meteor.hits(player)) {
-    gameOver("You faced a minor setback. Don't lose hope!");
+    gameOver("You grazed a meteor. But hope’s still in orbit.");
   }
   for (let i = obstacles.length - 1; i >= 0; i--) {
     if (obstacles[i].hits(player)) {
-      gameOver("You faced an obstacle. Don't lose hope.");
+      gameOver("You collided with darkness.Try again and blaze through it.");
     }
   }
  // Win condition
@@ -96,14 +96,14 @@ function gameOver(message) {
   text(message, width / 2, height / 2 - 20);
   fill(0, 255, 0);
   textSize(18);
-  text("Click refresh to try again", width / 2, height / 2 + 20);
+  text("Refresh to try again", width / 2, height / 2 + 20);
 }
 
 function showWinMessage() {
   fill(0, 255, 0);
   textSize(20);
   textAlign(CENTER);
-  text("Congratulations! You've discovered that hope isn't just \n about reaching the destination - it's about growing \n stronger with every challenge you face, \n You overcame all obstacles and your light \n now shines brightest in the cosmos!", width / 2, height / 2);
+  text("Hope isn't just about reaching the destination;\n it's about growing stronger with every challenge you face, \n CONGRATULATIONS ! \n You overcame all the obstacles and your light \n now shines brightest in the cosmos!", width / 2, height / 2);
   fill(255, 255, 200);
   textSize(16);
   text("Final Score: " + score, width / 2, height / 2 + 60);
@@ -115,14 +115,14 @@ function showWelcomeScreen() {
   
   fill(255, 255, 150);
   textAlign(CENTER);
-  textSize(28);
-  text("Light in the Dark", width / 2, 50);
+  textSize(25);
+  text("Welcome to The Trajectory Of Hope !", width / 2, 65);
   
   fill(255);
   textSize(17);
-  text("Welcome.\n Use Up and Down arrow keys to \n avoid your star from running into the asteroid belts and the meteors.\n Remember, no matter what happens, don't lose hope", width / 2, height / 2-50);
+  text("You are a star...journeying through a universe of challenges. \n Use the arrow keys to move up or down to dodge \n the stacked asteroid belts and avoid the moving meteors.\n Running into one of them would make you restart the game \n Crossing 50 obstacles would make you the winner !", width / 2, height / 2-50);
   
-  fill(200);
+  fill(255,255,150);
   textSize(16);
   text("Click anywhere to start your journey.", width / 2, height/2 +100);
 }
