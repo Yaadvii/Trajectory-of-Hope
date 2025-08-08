@@ -41,7 +41,7 @@ function draw() {
   updatePlanet(jupiter, 'jupiter');
 
   // Meteors at fixed positions
-  let meteorScores = [2,4, 5, 7,11, 13, 15, 17, 19, 22, 24, 26,28, 30, 33, 38, 41, 44, 47];
+  let meteorScores = [2,4,7,9,11,13,16,18,21,23,26,27,31,33,36,39,42,45,47];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
   if (meteor) {
     meteor.update();
@@ -95,7 +95,6 @@ function updatePlanet(planet, type) {
 function gameOver(message) {
   noLoop();
 
-  // Bold game over message with stroke
   stroke(0);
   strokeWeight(3);
   fill(255, 0, 0);
@@ -103,20 +102,19 @@ function gameOver(message) {
   textAlign(CENTER);
   text(message, width / 2, height / 2 - 20);
   
-  // Bold retry message with stroke
   stroke(0);
   strokeWeight(2);
   fill(0, 255, 0);
-  textSize(14);
+  textSize(16);
   text("Refresh to try again", width / 2, height / 2 + 20);
   
   noStroke();
 }
 
 function showWinMessage() {
-  fill(255,255,200);
+  fill(255,255,150);
   textSize(20);
-  textAlign(width/2, height/2-50);
+  textAlign(CENTER);
   text("Hope isn't just about reaching the destination;\n it's about growing stronger with every challenge you face, \n CONGRATULATIONS ! \n You overcame all the obstacles and your light \n now shines brightest in the cosmos!", width / 2, height / 2);
 }
 
