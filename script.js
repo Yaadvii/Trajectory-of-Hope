@@ -21,7 +21,7 @@ function draw() {
     showWelcomeScreen();
     return;
   }
-  background(0); // Keep background black
+  background(0);
   player.update();
   player.show();
   if (frameCount % 60 === 0) obstacles.push(new Obstacle()); //generating new obstacles every second
@@ -39,8 +39,9 @@ function draw() {
   }
   updatePlanet(saturn, 'saturn');
   updatePlanet(jupiter, 'jupiter');
+  
   // Meteors at fixed positions
-  let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 26, 33, 38, 41];
+  let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22,24 26, 30, 33, 38, 41, 44, 47];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
   if (meteor) {
     meteor.update();
@@ -62,7 +63,6 @@ function draw() {
   textSize(16);
   text("Obstacles overcome: " + score, 85, 20);
   
-  // Collision detection at the end to ensure text appears on top
   if (meteor && meteor.hits(player)) {
     gameOver("You faced a minor setback. Don't lose hope!");
   }
@@ -71,7 +71,7 @@ function draw() {
       gameOver("You faced an obstacle. Don't lose hope.");
     }
   }
- // Win condition check at the end to ensure text appears on top
+ // Win condition
   if (score >= 50) {
     noLoop();
     showWinMessage();
@@ -146,7 +146,7 @@ class Player {
       this.y = constrain(this.y, this.r, height - this.r);
     }
   }
-  
+  //player sprite
   show() {
     push();
     translate(this.x, this.y); 
@@ -177,8 +177,8 @@ class Obstacle {
   }
 
   show() {
-    fill(54, 54, 54);  // Charcoal grey
-    stroke(36, 36, 36); // Darker charcoal for outline
+    fill(54, 54, 54);  
+    stroke(36, 36, 36);
     strokeWeight(2);
     rect(this.x, this.y, this.w, this.h);
   }
@@ -251,7 +251,7 @@ class CelestialObject {
   constructor(x, y) {
     this.x = x;
     this.y = y;
-    this.r = random(0.8, 3.5); // Random size for each star
+    this.r = random(0.8, 3.5);
     this.twinkle = random(150, 255);
   }
   update() {
@@ -284,7 +284,6 @@ class CelestialObject {
     pop();
   }
 }
-//saturn avatar
 class Planet {
   constructor(type, x, y) {
     this.type = type;
