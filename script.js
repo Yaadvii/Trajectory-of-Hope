@@ -39,7 +39,7 @@ function draw() {
   }
   updatePlanet(saturn, 'saturn');
   updatePlanet(jupiter, 'jupiter');
-  
+
   // Meteors at fixed positions
   let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 24, 26, 30, 33, 38, 41, 44, 47];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
@@ -58,24 +58,29 @@ function draw() {
       score++;
     }
   }
-  // Score display
-  fill(255);
-  textSize(16);
-  text("Obstacles overcome: " + score, 85, 20);
-  
+
+  // Check collisions
   if (meteor && meteor.hits(player)) {
-    gameOver("You grazed a meteor. But hope’s still in orbit.");
+    gameOver("You grazed a meteor. But hope's still in orbit.");
   }
   for (let i = obstacles.length - 1; i >= 0; i--) {
     if (obstacles[i].hits(player)) {
       gameOver("You collided with darkness.Try again and blaze through it.");
     }
   }
- // Win condition
+
+  // Win condition
   if (score >= 50) {
     noLoop();
     showWinMessage();
+    return;
   }
+
+  // Draw all text elements last to ensure they appear on top
+  fill(255);
+  textSize(16);
+  textAlign(LEFT);
+  text("Obstacles overcome: " + score, 85, 20);
 }
 function updatePlanet(planet, type) {
   if (planet) {
@@ -112,16 +117,16 @@ function showWinMessage() {
 function showWelcomeScreen() {
   background(0);
   celestialObjects.forEach(star => { star.update(); star.show(); });
-  
+
   fill(255, 255, 150);
   textAlign(CENTER);
   textSize(25);
   text("Welcome to The Trajectory Of Hope !", width / 2, 65);
-  
+
   fill(255);
   textSize(17);
   text("You are a star...journeying through a universe of challenges. \n Use the arrow keys to move up or down to dodge \n the stacked asteroid belts and avoid the moving meteors.\n Running into one of them would make you restart the game \n Crossing 50 obstacles would make you the winner !", width / 2, height / 2-50);
-  
+
   fill(255,255,150);
   textSize(16);
   text("Click anywhere to start your journey.", width / 2, height/2 +100);
@@ -152,7 +157,7 @@ class Player {
     translate(this.x, this.y); 
     drawingContext.shadowColor = 'lightblue';
     drawingContext.shadowBlur = 15;
-    
+
     fill(173, 216, 230);
     noStroke();
     textAlign(CENTER, CENTER);
