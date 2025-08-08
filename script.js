@@ -41,7 +41,7 @@ function draw() {
   updatePlanet(jupiter, 'jupiter');
   
   // Meteors at fixed positions
-  let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22,24 26, 30, 33, 38, 41, 44, 47];
+  let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 24, 26, 30, 33, 38, 41, 44, 47];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
   if (meteor) {
     meteor.update();
