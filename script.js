@@ -41,7 +41,7 @@ function draw() {
   updatePlanet(jupiter, 'jupiter');
 
   // Meteors at fixed positions
-  let meteorScores = [2, 5, 7, 13, 15, 17, 19, 22, 24, 26, 30, 33, 38, 41, 44, 47];
+  let meteorScores = [2,4, 5, 7,11, 13, 15, 17, 19, 22, 24, 26,28, 30, 33, 38, 41, 44, 47];
   if (meteorScores.includes(score) && !meteor) meteor = new Meteor();
   if (meteor) {
     meteor.update();
@@ -76,7 +76,6 @@ function draw() {
     return;
   }
 
-  // Draw score text last to ensure it appears on top
   fill(255);
   textSize(16);
   textAlign(LEFT);
@@ -95,13 +94,13 @@ function updatePlanet(planet, type) {
 
 function gameOver(message) {
   noLoop();
-  // Draw game over text last to appear on top of all elements
+
   fill(255, 0, 0);
-  textSize(12);
+  textSize(20);
   textAlign(CENTER);
   text(message, width / 2, height / 2 - 20);
   fill(0, 255, 0);
-  textSize(11);
+  textSize(14);
   text("Refresh to try again", width / 2, height / 2 + 20);
 }
 
