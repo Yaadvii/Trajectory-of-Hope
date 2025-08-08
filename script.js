@@ -96,7 +96,7 @@ function updatePlanet(planet, type) {
 function gameOver(message) {
   noLoop();
   fill(255, 0, 0);
-  textSize(24);
+  textSize(17);
   textAlign(CENTER);
   text(message, width / 2, height / 2 - 20);
   fill(0, 255, 0);
