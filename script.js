@@ -65,7 +65,7 @@ function draw() {
   }
   for (let i = obstacles.length - 1; i >= 0; i--) {
     if (obstacles[i].hits(player)) {
-      gameOver("You collided with darkness.Try again and blaze through it.");
+      gameOver("You collided an asteroid. But hope doesn't shatter that easily.");
     }
   }
 
@@ -96,7 +96,7 @@ function updatePlanet(planet, type) {
 function gameOver(message) {
   noLoop();
   fill(255, 0, 0);
-  textSize(17);
+  textSize(19);
   textAlign(CENTER);
   text(message, width / 2, height / 2 - 20);
   fill(0, 255, 0);
@@ -105,13 +105,10 @@ function gameOver(message) {
 }
 
 function showWinMessage() {
-  fill(0, 255, 0);
+  fill(255,255,200);
   textSize(20);
-  textAlign(CENTER);
+  textAlign(width/2, height/2-50);
   text("Hope isn't just about reaching the destination;\n it's about growing stronger with every challenge you face, \n CONGRATULATIONS ! \n You overcame all the obstacles and your light \n now shines brightest in the cosmos!", width / 2, height / 2);
-  fill(255, 255, 200);
-  textSize(16);
-  text("Final Score: " + score, width / 2, height / 2 + 60);
 }
 
 function showWelcomeScreen() {
