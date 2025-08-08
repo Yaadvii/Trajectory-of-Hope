@@ -95,13 +95,22 @@ function updatePlanet(planet, type) {
 function gameOver(message) {
   noLoop();
 
+  // Bold game over message with stroke
+  stroke(0);
+  strokeWeight(3);
   fill(255, 0, 0);
   textSize(20);
   textAlign(CENTER);
   text(message, width / 2, height / 2 - 20);
+  
+  // Bold retry message with stroke
+  stroke(0);
+  strokeWeight(2);
   fill(0, 255, 0);
   textSize(14);
   text("Refresh to try again", width / 2, height / 2 + 20);
+  
+  noStroke();
 }
 
 function showWinMessage() {
